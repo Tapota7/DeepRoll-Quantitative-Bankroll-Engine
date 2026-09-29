@@ -93,7 +93,7 @@ export const ConfiguracionView: React.FC<ConfiguracionViewProps> = ({
             className="px-4 py-2 bg-[#1e293b] hover:bg-[#7f1d1d] text-[#ef4444] rounded border border-[#ef4444]/30 transition-colors flex items-center gap-1.5"
           >
             <span className="material-symbols-outlined text-[16px]">restart_alt</span>
-            <span>Restablecer Datos Demo (28 sesiones)</span>
+            <span>Borrar Todo y Dejar en Cero</span>
           </button>
         </div>
       </div>

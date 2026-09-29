@@ -32,18 +32,12 @@ import { NewSessionModal } from './components/modals/NewSessionModal';
 import { QuickTransactionModal } from './components/modals/QuickTransactionModal';
 
 export default function App() {
-  // Persistent Sessions & Ledger
+  // Persistent Sessions & Ledger (v2 initialized to zero)
   const [sessions, setSessions] = useState<Session[]>(() => {
     try {
-      const saved = localStorage.getItem('deeproll_sessions');
+      const saved = localStorage.getItem('deeproll_sessions_v2');
       if (saved) {
         const parsed: Session[] = JSON.parse(saved);
-        const allOldNL5 =
-          parsed.length === INITIAL_SESSIONS.length &&
-          parsed.every((s) => s.stake === 'NL5 Deep');
-        if (allOldNL5) {
-          return INITIAL_SESSIONS;
-        }
         return parsed.map((s) => ({
           ...s,
           operator: 'GGPoker' as Operator,
@@ -62,7 +56,7 @@ export default function App() {
 
   const [ledger, setLedger] = useState<BankrollLedger>(() => {
     try {
-      const saved = localStorage.getItem('deeproll_ledger');
+      const saved = localStorage.getItem('deeproll_ledger_v2');
       return saved ? JSON.parse(saved) : INITIAL_LEDGER;
     } catch {
       return INITIAL_LEDGER;
@@ -72,7 +66,7 @@ export default function App() {
   // Save to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('deeproll_sessions', JSON.stringify(sessions));
+      localStorage.setItem('deeproll_sessions_v2', JSON.stringify(sessions));
     } catch (e) {
       console.error(e);
     }
@@ -80,7 +74,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('deeproll_ledger', JSON.stringify(ledger));
+      localStorage.setItem('deeproll_ledger_v2', JSON.stringify(ledger));
     } catch (e) {
       console.error(e);
     }
@@ -275,9 +269,11 @@ export default function App() {
   };
 
   const handleResetData = () => {
-    if (confirm('¿Restablecer todos los datos del ledger a la muestra de 28 sesiones original?')) {
-      setSessions(INITIAL_SESSIONS);
+    if (confirm('¿Borrar todos los datos y dejar la aplicación en cero?')) {
+      setSessions([]);
       setLedger(INITIAL_LEDGER);
+      localStorage.removeItem('deeproll_sessions_v2');
+      localStorage.removeItem('deeproll_ledger_v2');
       localStorage.removeItem('deeproll_sessions');
       localStorage.removeItem('deeproll_ledger');
     }

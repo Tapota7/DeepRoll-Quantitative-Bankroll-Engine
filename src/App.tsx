@@ -166,6 +166,20 @@ export default function App() {
     return list;
   }, [sessions, dateRangePreset, customStartDate, customEndDate, selectedStake]);
 
+  // Derive active box size (100bb in USD) from selectedStake
+  const activeBoxSize = useMemo(() => {
+    if (selectedStake === 'NL5 Deep') return 5.0;
+    if (selectedStake === 'NL10 Deep') return 10.0;
+    if (selectedStake === 'NL25 Deep') return 25.0;
+    if (selectedStake === 'NL50 Deep') return 50.0;
+    // 'all': weighted average by hands played
+    if (filteredSessions.length === 0) return 5.0;
+    const totalHands = filteredSessions.reduce((a, s) => a + s.hands, 0);
+    if (totalHands === 0) return (filteredSessions[0]?.bb ?? 0.05) * 100;
+    const weightedBB = filteredSessions.reduce((a, s) => a + (s.bb * s.hands), 0) / totalHands;
+    return parseFloat((weightedBB * 100).toFixed(2));
+  }, [selectedStake, filteredSessions]);
+
   const handleResetDateFilter = () => {
     setDateRangePreset('all');
     setCustomStartDate('');
@@ -305,6 +319,7 @@ export default function App() {
           activeTab={desktopTab}
           onSelectTab={setDesktopTab}
           ledger={ledger}
+          boxSize={activeBoxSize}
         />
 
         <div className="pl-64">
@@ -418,7 +433,7 @@ export default function App() {
                 {/* LEVEL 1: DUAL CHART ROW */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                   <div className="lg:col-span-8">
-                    <BankrollGrowthChart ledger={ledger} sessions={filteredSessions} />
+                    <BankrollGrowthChart ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
                   </div>
                   <div className="lg:col-span-4">
                     <UnderwaterChart ledger={ledger} sessions={filteredSessions} />
@@ -426,7 +441,7 @@ export default function App() {
                 </div>
 
                 {/* LEVEL 2: 6 SCIENTIFIC KPIS */}
-                <QuantTelemetryRibbon ledger={ledger} sessions={filteredSessions} />
+                <QuantTelemetryRibbon ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
 
                 {/* LEVEL 3: HISTOGRAM & CROSS MATRIX */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
@@ -472,13 +487,13 @@ export default function App() {
                 {/* Resumen Executive Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                   <div className="lg:col-span-8">
-                    <BankrollGrowthChart ledger={ledger} sessions={filteredSessions} />
+                    <BankrollGrowthChart ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
                   </div>
                   <div className="lg:col-span-4">
                     <UnderwaterChart ledger={ledger} sessions={filteredSessions} />
                   </div>
                 </div>
-                <QuantTelemetryRibbon ledger={ledger} sessions={filteredSessions} />
+                <QuantTelemetryRibbon ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
                 <DailyPerformanceCard sessions={filteredSessions} />
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                   <div className="lg:col-span-6">
@@ -533,6 +548,7 @@ export default function App() {
             {desktopTab === 'banca' && (
               <BancaRiesgoView
                 ledger={ledger}
+                boxSize={activeBoxSize}
                 onOpenTransactionModal={(type) => setQuickTx({ isOpen: true, type })}
                 onOpenShotPlanner={() => setIsShotPlannerOpen(true)}
               />

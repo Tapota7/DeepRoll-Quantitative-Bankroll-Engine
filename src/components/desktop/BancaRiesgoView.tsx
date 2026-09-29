@@ -3,12 +3,14 @@ import { BankrollLedger } from '../../types/poker';
 
 interface BancaRiesgoViewProps {
   ledger: BankrollLedger;
+  boxSize?: number;
   onOpenTransactionModal: (type: 'deposit' | 'withdraw' | 'adjustment') => void;
   onOpenShotPlanner: () => void;
 }
 
 export const BancaRiesgoView: React.FC<BancaRiesgoViewProps> = ({
   ledger,
+  boxSize = 5.0,
   onOpenTransactionModal,
   onOpenShotPlanner,
 }) => {
@@ -46,7 +48,15 @@ export const BancaRiesgoView: React.FC<BancaRiesgoViewProps> = ({
     }
   }
 
-  // Coverages
+  // Active stake coverage (uses 200bb = boxSize * 2 per buy-in)
+  const activeBoxLabel =
+    boxSize <= 5 ? 'NL5 Deep' :
+    boxSize <= 10 ? 'NL10 Deep' :
+    boxSize <= 25 ? 'NL25 Deep' : 'NL50 Deep';
+  const activeBoxCost200bb = boxSize * 2; // 200bb deep
+  const activeCoverage = (ledger.currentBalance / activeBoxCost200bb).toFixed(1);
+
+  // Coverages comparison grid (always shown for reference)
   const nl5Boxes = (ledger.currentBalance / 10).toFixed(2);
   const nl10Boxes = (ledger.currentBalance / 20).toFixed(1);
   const nl25Boxes = (ledger.currentBalance / 50).toFixed(1);
@@ -184,24 +194,24 @@ export const BancaRiesgoView: React.FC<BancaRiesgoViewProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="px-2 py-0.5 rounded bg-[#171f33] font-mono text-[11px] text-[#10b981] font-bold">
-                  NL5 Deep
+                  {activeBoxLabel}
                 </span>
-                <span className="font-sans text-[12px] text-[#94a3b8]">Caja: $10,00 USD (200 bb)</span>
+                <span className="font-sans text-[12px] text-[#94a3b8]">Caja: ${activeBoxCost200bb.toFixed(2)} USD (200 bb)</span>
               </div>
               <span className="font-mono text-[10px] text-[#10b981] uppercase tracking-wider font-bold">
-                Stake Actual
+                Nivel Activo
               </span>
             </div>
 
             <div className="flex items-baseline justify-between mt-1">
               <span className="font-mono text-[24px] text-[#10b981] font-bold">
-                {nl5Boxes} <span className="text-[12px] font-normal text-[#94a3b8]">cajas</span>
+                {activeCoverage} <span className="text-[12px] font-normal text-[#94a3b8]">cajas</span>
               </span>
               <span className="font-mono text-[11px] text-[#64748b]">Recomendado: &gt;150</span>
             </div>
 
             <div className="w-full bg-[#222a3d] h-2 rounded-full overflow-hidden">
-              <div className="bg-[#10b981] h-full rounded-full" style={{ width: '100%' }}></div>
+              <div className="bg-[#10b981] h-full rounded-full" style={{ width: `${Math.min(100, (parseFloat(activeCoverage) / 150) * 100).toFixed(0)}%` }}></div>
             </div>
             <p className="font-sans text-[12px] text-[#64748b] pt-0.5">
               Gestión ultraconservadora. Protección alta contra rachas atípicas de varianza deepstack.

@@ -4,9 +4,10 @@ import { BankrollLedger, Session } from '../../types/poker';
 interface QuantTelemetryRibbonProps {
   ledger: BankrollLedger;
   sessions?: Session[];
+  boxSize?: number;
 }
 
-export const QuantTelemetryRibbon: React.FC<QuantTelemetryRibbonProps> = ({ ledger, sessions = [] }) => {
+export const QuantTelemetryRibbon: React.FC<QuantTelemetryRibbonProps> = ({ ledger, sessions = [], boxSize = 5.0 }) => {
   const dynamicStats = useMemo(() => {
     if (!sessions || sessions.length === 0) {
       return {
@@ -112,7 +113,7 @@ export const QuantTelemetryRibbon: React.FC<QuantTelemetryRibbonProps> = ({ ledg
         <div className="pt-1.5 border-t border-[rgba(255,255,255,0.08)] font-mono text-[10px] text-[#64748b] flex items-center justify-between">
           <span>Capacidad Total:</span>
           <span className="text-[#f8fafc] font-bold">
-            {(ledger.currentBalance / (sessions[0]?.bb ? sessions[0].bb * 100 : 5)).toFixed(1)} Cajas
+            {(ledger.currentBalance / boxSize).toFixed(1)} Cajas
           </span>
         </div>
       </div>

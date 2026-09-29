@@ -5,12 +5,14 @@ interface DesktopSidebarProps {
   activeTab: DesktopTab;
   onSelectTab: (tab: DesktopTab) => void;
   ledger: BankrollLedger;
+  boxSize?: number;
 }
 
 export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   activeTab,
   onSelectTab,
   ledger,
+  boxSize = 5.0,
 }) => {
   const navItems: { id: DesktopTab; label: string; icon: string }[] = [
     { id: 'resumen', label: 'Resumen', icon: 'grid_view' },
@@ -20,7 +22,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
     { id: 'configuracion', label: 'Configuración', icon: 'tune' },
   ];
 
-  const totalCajas = (ledger.currentBalance / 5.0).toFixed(0);
+  const totalCajas = (ledger.currentBalance / boxSize).toFixed(0);
 
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-[#131b2e] z-50 flex flex-col justify-between py-4 border-r border-[rgba(255,255,255,0.08)] shadow-[0_1px_8px_rgba(0,0,0,0.04)]">

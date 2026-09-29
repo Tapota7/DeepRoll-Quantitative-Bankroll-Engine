@@ -4,9 +4,10 @@ import { BankrollLedger, Session } from '../../types/poker';
 interface BankrollGrowthChartProps {
   ledger: BankrollLedger;
   sessions: Session[];
+  boxSize?: number;
 }
 
-export const BankrollGrowthChart: React.FC<BankrollGrowthChartProps> = ({ ledger, sessions }) => {
+export const BankrollGrowthChart: React.FC<BankrollGrowthChartProps> = ({ ledger, sessions, boxSize = 5.0 }) => {
   const [viewUnit, setViewUnit] = useState<'usd' | 'cajas' | 'bb'>('usd');
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -69,8 +70,8 @@ export const BankrollGrowthChart: React.FC<BankrollGrowthChartProps> = ({ ledger
       : '60,240 735,240';
 
   const formatUnit = (usd: number) => {
-    if (viewUnit === 'cajas') return `${(usd / 5.0).toFixed(1)} cx`;
-    if (viewUnit === 'bb') return `${(usd / 0.05).toLocaleString('es-ES', { maximumFractionDigits: 0 })} bb`;
+    if (viewUnit === 'cajas') return `${(usd / boxSize).toFixed(1)} cx`;
+    if (viewUnit === 'bb') return `${(usd / (boxSize / 100)).toLocaleString('es-ES', { maximumFractionDigits: 0 })} bb`;
     return `$${usd.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
   };
 
@@ -142,7 +143,7 @@ export const BankrollGrowthChart: React.FC<BankrollGrowthChartProps> = ({ ledger
             {formatUnit(running)}
           </span>
           <span className="text-[11px] text-[#10b981] font-semibold">
-            +{(running / 5.0).toFixed(1)} Cajas (100bb)
+            {running >= 0 ? '+' : ''}{(running / boxSize).toFixed(1)} Cajas (100bb)
           </span>
         </div>
 
@@ -152,7 +153,7 @@ export const BankrollGrowthChart: React.FC<BankrollGrowthChartProps> = ({ ledger
             {periodProfit >= 0 ? `+$${periodProfit.toFixed(2)}` : `-$${Math.abs(periodProfit).toFixed(2)}`}
           </span>
           <span className="text-[11px] text-[#94a3b8]">
-            {periodProfit >= 0 ? '+' : ''}{(periodProfit / 5.0).toFixed(1)} cx de impacto
+            {periodProfit >= 0 ? '+' : ''}{(periodProfit / boxSize).toFixed(1)} cx de impacto
           </span>
         </div>
 

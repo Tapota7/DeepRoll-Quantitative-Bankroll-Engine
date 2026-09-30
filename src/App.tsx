@@ -23,6 +23,7 @@ import { TransitionSimulator } from './components/desktop/TransitionSimulator';
 import { SessionsTable } from './components/desktop/SessionsTable';
 import { BancaRiesgoView } from './components/desktop/BancaRiesgoView';
 import { ConfiguracionView } from './components/desktop/ConfiguracionView';
+import { QuantDiagnosticModule } from './components/desktop/QuantDiagnosticModule';
 
 // Modals
 import { EditSessionDrawer } from './components/modals/EditSessionDrawer';
@@ -448,6 +449,9 @@ export default function App() {
                 {/* LEVEL 2: 6 SCIENTIFIC KPIS */}
                 <QuantTelemetryRibbon ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
 
+                {/* LEVEL 2.5: DIAGNOSTICO CUANTITATIVO, FATIGA & RAKEBACK LEVERAGE */}
+                <QuantDiagnosticModule sessions={filteredSessions} />
+
                 {/* LEVEL 3: HISTOGRAM & CROSS MATRIX */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                   <div className="lg:col-span-6">
@@ -499,6 +503,7 @@ export default function App() {
                   </div>
                 </div>
                 <QuantTelemetryRibbon ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
+                <QuantDiagnosticModule sessions={filteredSessions} />
                 <DailyPerformanceCard sessions={filteredSessions} />
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                   <div className="lg:col-span-6">

@@ -24,6 +24,7 @@ import { SessionsTable } from './components/desktop/SessionsTable';
 import { BancaRiesgoView } from './components/desktop/BancaRiesgoView';
 import { ConfiguracionView } from './components/desktop/ConfiguracionView';
 import { QuantDiagnosticModule } from './components/desktop/QuantDiagnosticModule';
+import { ExecutiveMetricsStrip } from './components/desktop/ExecutiveMetricsStrip';
 
 // Modals
 import { EditSessionDrawer } from './components/modals/EditSessionDrawer';
@@ -446,6 +447,14 @@ export default function App() {
             {/* TAB ROUTING */}
             {desktopTab === 'analisis' && (
               <>
+                {/* 4 GOLDEN EXECUTIVE KPIS */}
+                <ExecutiveMetricsStrip
+                  ledger={ledger}
+                  sessions={filteredSessions}
+                  boxSize={activeBoxSize}
+                  selectedStake={selectedStake}
+                />
+
                 {/* LEVEL 1: DUAL CHART ROW */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                   <div className="lg:col-span-8">
@@ -503,7 +512,15 @@ export default function App() {
 
             {desktopTab === 'resumen' && (
               <>
-                {/* Resumen Executive Layout */}
+                {/* 4 GOLDEN EXECUTIVE KPIS */}
+                <ExecutiveMetricsStrip
+                  ledger={ledger}
+                  sessions={filteredSessions}
+                  boxSize={activeBoxSize}
+                  selectedStake={selectedStake}
+                />
+
+                {/* VISUAL HUB: EVOLUTION & UNDERWATER DRAWDOWN */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                   <div className="lg:col-span-8">
                     <BankrollGrowthChart ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
@@ -512,17 +529,12 @@ export default function App() {
                     <UnderwaterChart ledger={ledger} sessions={filteredSessions} />
                   </div>
                 </div>
-                <QuantTelemetryRibbon ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
+
+                {/* DIAGNOSTIC COACH HEURISTICS */}
                 <QuantDiagnosticModule sessions={filteredSessions} />
+
+                {/* AUDIT & DAILY PERFORMANCE */}
                 <DailyPerformanceCard sessions={filteredSessions} />
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                  <div className="lg:col-span-6">
-                    <DistributionHistogram sessions={filteredSessions} />
-                  </div>
-                  <div className="lg:col-span-6">
-                    <CrossPerformanceMatrix sessions={filteredSessions} />
-                  </div>
-                </div>
                 <SessionsTable
                   sessions={filteredSessions}
                   totalSessionsCount={sessions.length}

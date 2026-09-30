@@ -31,6 +31,7 @@ import { DeleteSessionModal } from './components/modals/DeleteSessionModal';
 import { ShotPlannerModal } from './components/modals/ShotPlannerModal';
 import { NewSessionModal } from './components/modals/NewSessionModal';
 import { QuickTransactionModal } from './components/modals/QuickTransactionModal';
+import { useWebMCP } from './hooks/useWebMCP';
 
 export default function App() {
   // Persistent Sessions & Ledger (v2 initialized to zero)
@@ -251,6 +252,15 @@ export default function App() {
     setSessions(updatedList);
     setLedger((prev) => recalculateLedger(updatedList, prev));
   };
+
+  // Agent-Native WebMCP Runtime: expone herramientas estructuradas para agentes autónomos
+  useWebMCP({
+    ledger,
+    sessions,
+    activeBoxSize,
+    onSaveSession: handleCreateNewSession,
+    nextSessionNumber: sessions.length + 1,
+  });
 
   const handleQuickTransaction = (
     type: 'deposit' | 'withdraw' | 'adjustment',

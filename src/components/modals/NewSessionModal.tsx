@@ -64,6 +64,8 @@ export const NewSessionModal: React.FC<NewSessionModalProps> = ({
         <form
           ref={refs.formRef}
           onSubmit={handleSubmit}
+          data-toolname="register_poker_session"
+          data-tooldescription="Registra y concilia una nueva sesión de poker en el ledger de DeepRoll con métricas cuantitativas"
           className="p-5 flex flex-col gap-4 max-h-[85vh] overflow-y-auto text-[12px]"
         >
           {/* Operador (GGPoker único) y Stake */}
@@ -88,6 +90,7 @@ export const NewSessionModal: React.FC<NewSessionModalProps> = ({
               <select
                 value={stake}
                 onChange={(e) => setStake(e.target.value)}
+                data-toolparam="stake"
                 className="bg-[#050507] p-2.5 rounded-lg border border-[rgba(255,255,255,0.1)] text-[#f8fafc] outline-none cursor-pointer focus:border-[#10b981] transition-colors"
               >
                 <option value="NL5 Deep">NL5 Deep ($0.02/$0.05) • $5/cx</option>
@@ -114,6 +117,7 @@ export const NewSessionModal: React.FC<NewSessionModalProps> = ({
                   value={hands || ''}
                   onChange={(e) => setHands(parseInt(e.target.value, 10) || 0)}
                   onFocus={(e) => e.target.select()}
+                  data-toolparam="hands"
                   className="w-full bg-transparent text-[#f8fafc] outline-none font-bold text-[13px] tabular-nums"
                   placeholder="Ej: 1200"
                   required
@@ -136,6 +140,7 @@ export const NewSessionModal: React.FC<NewSessionModalProps> = ({
                   value={durationMinutes || ''}
                   onChange={(e) => setDurationMinutes(parseInt(e.target.value, 10) || 0)}
                   onFocus={(e) => e.target.select()}
+                  data-toolparam="durationMinutes"
                   className="w-full bg-transparent text-[#f8fafc] outline-none font-bold text-[13px] tabular-nums"
                   placeholder="Minutos (ej: 120)"
                   required
@@ -180,6 +185,7 @@ export const NewSessionModal: React.FC<NewSessionModalProps> = ({
                   value={Number.isNaN(directProfit) ? '' : directProfit}
                   onChange={(e) => setDirectProfit(parseFloat(e.target.value) || 0)}
                   onFocus={(e) => e.target.select()}
+                  data-toolparam="directProfitUSD"
                   className={`w-full bg-transparent outline-none font-bold text-[15px] tabular-nums ${
                     directProfit >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'
                   }`}
@@ -205,6 +211,7 @@ export const NewSessionModal: React.FC<NewSessionModalProps> = ({
                   value={Number.isNaN(rakeback) ? '' : rakeback}
                   onChange={(e) => setRakeback(parseFloat(e.target.value) || 0)}
                   onFocus={(e) => e.target.select()}
+                  data-toolparam="rakebackUSD"
                   className="w-full bg-transparent text-[#ffb95f] outline-none font-bold text-[15px] tabular-nums"
                   placeholder="0.00"
                 />
@@ -251,6 +258,7 @@ export const NewSessionModal: React.FC<NewSessionModalProps> = ({
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
+              data-toolparam="notes"
               className="bg-[#050507] p-2.5 rounded-lg border border-[rgba(255,255,255,0.1)] text-[#f8fafc] text-[12px] font-sans h-16 resize-none focus:border-[rgba(255,255,255,0.2)] outline-none"
               placeholder="Dinámicas de mesa, recreacionales detectados o calidad del A-game..."
             />

@@ -303,6 +303,11 @@ export default function App() {
     }));
   };
 
+  const handleImportBackup = (importedData: { ledger: BankrollLedger; sessions: Session[] }) => {
+    setSessions(importedData.sessions);
+    setLedger(importedData.ledger);
+  };
+
   const tabTitles: Record<DesktopTab, string> = {
     resumen: 'Resumen General',
     sesiones: 'Auditoría de Sesiones',
@@ -557,8 +562,10 @@ export default function App() {
             {desktopTab === 'configuracion' && (
               <ConfiguracionView
                 ledger={ledger}
+                sessions={sessions}
                 onResetData={handleResetData}
                 onUpdateStartingBalance={handleUpdateStartingBalance}
+                onImportBackup={handleImportBackup}
               />
             )}
           </main>

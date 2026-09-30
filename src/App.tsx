@@ -13,18 +13,11 @@ import { DesktopSidebar } from './components/desktop/DesktopSidebar';
 import { DesktopHeader } from './components/desktop/DesktopHeader';
 import { BankrollGrowthChart } from './components/desktop/BankrollGrowthChart';
 import { UnderwaterChart } from './components/desktop/UnderwaterChart';
-import { QuantTelemetryRibbon } from './components/desktop/QuantTelemetryRibbon';
-import { DistributionHistogram } from './components/desktop/DistributionHistogram';
-import { CrossPerformanceMatrix } from './components/desktop/CrossPerformanceMatrix';
-import { WeekdayProfitabilityChart } from './components/desktop/WeekdayProfitabilityChart';
-import { DailyPerformanceCard } from './components/desktop/DailyPerformanceCard';
-import { MonteCarloModule } from './components/desktop/MonteCarloModule';
-import { TransitionSimulator } from './components/desktop/TransitionSimulator';
-import { SessionsTable } from './components/desktop/SessionsTable';
 import { BancaRiesgoView } from './components/desktop/BancaRiesgoView';
 import { ConfiguracionView } from './components/desktop/ConfiguracionView';
 import { QuantDiagnosticModule } from './components/desktop/QuantDiagnosticModule';
 import { ExecutiveMetricsStrip } from './components/desktop/ExecutiveMetricsStrip';
+import { ExecutiveDetailTabs } from './components/desktop/ExecutiveDetailTabs';
 
 // Modals
 import { EditSessionDrawer } from './components/modals/EditSessionDrawer';
@@ -455,7 +448,7 @@ export default function App() {
                   selectedStake={selectedStake}
                 />
 
-                {/* LEVEL 1: DUAL CHART ROW */}
+                {/* LEVEL 1: DUAL CHART ROW (70/30) */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                   <div className="lg:col-span-8">
                     <BankrollGrowthChart ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
@@ -465,36 +458,11 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* LEVEL 2: 6 SCIENTIFIC KPIS */}
-                <QuantTelemetryRibbon ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
-
-                {/* LEVEL 2.5: DIAGNOSTICO CUANTITATIVO, FATIGA & RAKEBACK LEVERAGE */}
+                {/* DIAGNOSTICO CUANTITATIVO, FATIGA & RAKEBACK LEVERAGE */}
                 <QuantDiagnosticModule sessions={filteredSessions} />
 
-                {/* LEVEL 3: HISTOGRAM & CROSS MATRIX */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                  <div className="lg:col-span-6">
-                    <DistributionHistogram sessions={filteredSessions} />
-                  </div>
-                  <div className="lg:col-span-6">
-                    <CrossPerformanceMatrix sessions={filteredSessions} />
-                  </div>
-                </div>
-
-                {/* LEVEL 3.2: RESUMEN DE RENDIMIENTO DIARIO */}
-                <DailyPerformanceCard sessions={filteredSessions} />
-
-                {/* LEVEL 3.3: RENTABILIDAD POR DÍAS DE LA SEMANA (LUNES A DOMINGO) */}
-                <WeekdayProfitabilityChart sessions={filteredSessions} />
-
-                {/* LEVEL 3.4: MONTE CARLO PROJECTION */}
-                <MonteCarloModule />
-
-                {/* LEVEL 3.5: TRANSITION & BREAK-EVEN SIMULATOR */}
-                <TransitionSimulator />
-
-                {/* LEVEL 4: GRANULAR AUDIT TABLE */}
-                <SessionsTable
+                {/* ON-DEMAND ANALYTICAL DEPTH TABS (Default: Varianza, Matriz & Monte Carlo) */}
+                <ExecutiveDetailTabs
                   sessions={filteredSessions}
                   totalSessionsCount={sessions.length}
                   onEditSession={(s) => setEditingSession(s)}
@@ -506,6 +474,7 @@ export default function App() {
                   onStartDateChange={setCustomStartDate}
                   onEndDateChange={setCustomEndDate}
                   onResetDateFilter={handleResetDateFilter}
+                  defaultSubTab="varianza"
                 />
               </>
             )}
@@ -533,9 +502,8 @@ export default function App() {
                 {/* DIAGNOSTIC COACH HEURISTICS */}
                 <QuantDiagnosticModule sessions={filteredSessions} />
 
-                {/* AUDIT & DAILY PERFORMANCE */}
-                <DailyPerformanceCard sessions={filteredSessions} />
-                <SessionsTable
+                {/* ON-DEMAND EXECUTIVE DETAIL TABS (Default: Sesiones) */}
+                <ExecutiveDetailTabs
                   sessions={filteredSessions}
                   totalSessionsCount={sessions.length}
                   onEditSession={(s) => setEditingSession(s)}
@@ -547,34 +515,26 @@ export default function App() {
                   onStartDateChange={setCustomStartDate}
                   onEndDateChange={setCustomEndDate}
                   onResetDateFilter={handleResetDateFilter}
+                  defaultSubTab="sesiones"
                 />
               </>
             )}
 
             {desktopTab === 'sesiones' && (
-              <>
-                <SessionsTable
-                  sessions={filteredSessions}
-                  totalSessionsCount={sessions.length}
-                  onEditSession={(s) => setEditingSession(s)}
-                  onDeleteSession={(s) => setDeletingSession(s)}
-                  dateRangePreset={dateRangePreset}
-                  onSelectDatePreset={setDateRangePreset}
-                  startDate={customStartDate}
-                  endDate={customEndDate}
-                  onStartDateChange={setCustomStartDate}
-                  onEndDateChange={setCustomEndDate}
-                  onResetDateFilter={handleResetDateFilter}
-                />
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                  <div className="lg:col-span-6">
-                    <DistributionHistogram sessions={filteredSessions} />
-                  </div>
-                  <div className="lg:col-span-6">
-                    <CrossPerformanceMatrix sessions={filteredSessions} />
-                  </div>
-                </div>
-              </>
+              <ExecutiveDetailTabs
+                sessions={filteredSessions}
+                totalSessionsCount={sessions.length}
+                onEditSession={(s) => setEditingSession(s)}
+                onDeleteSession={(s) => setDeletingSession(s)}
+                dateRangePreset={dateRangePreset}
+                onSelectDatePreset={setDateRangePreset}
+                startDate={customStartDate}
+                endDate={customEndDate}
+                onStartDateChange={setCustomStartDate}
+                onEndDateChange={setCustomEndDate}
+                onResetDateFilter={handleResetDateFilter}
+                defaultSubTab="sesiones"
+              />
             )}
 
             {desktopTab === 'banca' && (

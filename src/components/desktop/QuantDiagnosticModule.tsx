@@ -11,23 +11,21 @@ export const QuantDiagnosticModule: React.FC<QuantDiagnosticModuleProps> = ({ se
 
   if (sessions.length === 0) {
     return (
-      <div className="p-5 rounded-xl bg-[#131b2e] border border-[rgba(255,255,255,0.08)] font-mono text-[12px] flex items-center justify-between shadow-sm">
+      <div className="p-5 rounded-2xl bg-[#111218] border border-white/[0.06] flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-[#38bdf8]/10 text-[#38bdf8] flex items-center justify-center">
-            <span className="material-symbols-outlined text-[20px]">psychology</span>
+          <div className="w-8 h-8 rounded-lg bg-white/[0.04] text-zinc-400 flex items-center justify-center">
+            <span className="material-symbols-outlined text-[18px]">psychology</span>
           </div>
           <div>
-            <h4 className="font-sans text-[14px] font-bold text-[#f8fafc]">
-              Coach Cuantitativo en Espera
+            <h4 className="font-sans text-[14px] font-semibold text-zinc-100">
+              Diagnóstico Heurístico en Espera
             </h4>
-            <p className="text-[11px] text-[#64748b]">
-              Registra tus sesiones para activar el análisis automático de fatiga mental, apalancamiento de rakeback y consistencia.
+            <p className="text-[12px] text-zinc-500 font-sans mt-0.5">
+              Registra tus sesiones para activar el análisis automático de fatiga y consistencia.
             </p>
           </div>
         </div>
-        <span className="px-2 py-0.5 rounded bg-[#050507] text-[#64748b] text-[10px] font-bold">
-          0 SESIONES
-        </span>
+        <span className="text-zinc-500 font-sans text-[11px]">0 sesiones</span>
       </div>
     );
   }
@@ -35,27 +33,23 @@ export const QuantDiagnosticModule: React.FC<QuantDiagnosticModuleProps> = ({ se
   const { fatigue, rakeback, consistency } = report;
 
   return (
-    <div className="flex flex-col gap-3 font-mono text-[12px]">
-      {/* Header del Coach */}
-      <div className="flex items-center justify-between">
+    <div className="p-6 rounded-2xl bg-[#111218] border border-white/[0.06] flex flex-col gap-5">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-white/[0.04]">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#38bdf8] text-[20px]">psychology</span>
-          <h3 className="font-sans text-[16px] font-bold text-[#f8fafc] tracking-tight">
-            Diagnóstico Cuantitativo &amp; Fatiga Operativa
+          <h3 className="font-sans text-[15px] font-semibold text-zinc-100 tracking-tight">
+            Diagnóstico Cuantitativo &amp; Fatiga
           </h3>
-          <span className="px-1.5 py-0.2 rounded bg-[#064e3b]/30 text-[#10b981] font-bold text-[9.5px]">
-            AI HEURISTICS
-          </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-[#64748b]">Salud Operativa:</span>
+          <span className="text-[12px] font-sans text-zinc-500">Salud Operativa:</span>
           <span
-            className={`px-2 py-0.5 rounded font-bold text-[11px] ${
+            className={`font-mono text-[12px] font-bold px-2 py-0.5 rounded-lg ${
               consistency.status === 'optimo'
-                ? 'bg-[#064e3b] text-[#6ffbbe]'
+                ? 'text-[#34d399] bg-[#34d399]/10'
                 : consistency.status === 'moderado'
-                ? 'bg-[#78350f] text-[#f59e0b]'
-                : 'bg-[#7f1d1d] text-[#ef4444]'
+                ? 'text-amber-400 bg-amber-400/10'
+                : 'text-[#fb7185] bg-[#fb7185]/10'
             }`}
           >
             {consistency.healthScore}/100 • {consistency.status.toUpperCase()}
@@ -63,47 +57,43 @@ export const QuantDiagnosticModule: React.FC<QuantDiagnosticModuleProps> = ({ se
         </div>
       </div>
 
-      {/* Grid de 3 Pilares Diagnósticos */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {/* Pilar 1: Fatiga & Drop de Rendimiento */}
-        <div className="p-4 rounded-xl bg-[#131b2e] border border-[rgba(255,255,255,0.08)] flex flex-col justify-between shadow-sm relative overflow-hidden">
+      {/* 3 Balanced Pillars */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* Pilar 1: Fatiga & Duración */}
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] flex flex-col justify-between gap-3">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] text-[#64748b] uppercase tracking-wider font-semibold">
-                1. Fatiga &amp; Duración
+            <div className="flex items-center justify-between text-[11px] font-sans text-zinc-400">
+              <span>Fatiga &amp; Duración</span>
+              <span className={`text-[10px] font-mono ${fatigue.hasFatigueDrop ? 'text-[#fb7185]' : 'text-zinc-500'}`}>
+                {fatigue.hasFatigueDrop ? 'Caída de edge' : 'Estable'}
               </span>
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  fatigue.hasFatigueDrop ? 'bg-[#ef4444] animate-ping' : 'bg-[#10b981]'
-                }`}
-              />
             </div>
 
-            <div className="grid grid-cols-2 gap-2 p-2 rounded bg-[#050507] border border-[rgba(255,255,255,0.04)] my-1">
+            <div className="grid grid-cols-2 gap-2 p-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[11px] font-sans">
               <div>
-                <span className="text-[9px] text-[#64748b] block">&lt; 90 min ({fatigue.shortSessionCount})</span>
-                <span className={`text-[13px] font-bold tabular-nums ${fatigue.shortWinrateBB100 >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'}`}>
+                <span className="text-zinc-500 block text-[10px]">&lt; 90 min ({fatigue.shortSessionCount})</span>
+                <span className={`font-mono font-bold ${fatigue.shortWinrateBB100 >= 0 ? 'text-[#34d399]' : 'text-[#fb7185]'}`}>
                   {fatigue.shortWinrateBB100 >= 0 ? '+' : ''}{fatigue.shortWinrateBB100} bb
                 </span>
               </div>
               <div>
-                <span className="text-[9px] text-[#64748b] block">≥ 90 min ({fatigue.longSessionCount})</span>
-                <span className={`text-[13px] font-bold tabular-nums ${fatigue.longWinrateBB100 >= 0 ? 'text-[#38bdf8]' : 'text-[#ef4444]'}`}>
+                <span className="text-zinc-500 block text-[10px]">≥ 90 min ({fatigue.longSessionCount})</span>
+                <span className={`font-mono font-bold ${fatigue.longWinrateBB100 >= 0 ? 'text-zinc-300' : 'text-[#fb7185]'}`}>
                   {fatigue.longWinrateBB100 >= 0 ? '+' : ''}{fatigue.longWinrateBB100} bb
                 </span>
               </div>
             </div>
 
-            <p className="font-sans text-[11px] text-[#dae2fd] leading-relaxed">
+            <p className="text-[12px] text-zinc-400 font-sans leading-relaxed">
               {fatigue.recommendation}
             </p>
           </div>
 
-          <div className="pt-2 mt-2 border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between text-[10px] text-[#64748b]">
-            <span>Delta Winrate:</span>
+          <div className="pt-2 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-zinc-500 font-sans">
+            <span>Diferencia winrate:</span>
             <span
-              className={`font-bold tabular-nums ${
-                fatigue.winrateDeltaBB100 > 0 ? 'text-[#ef4444]' : 'text-[#10b981]'
+              className={`font-mono font-medium ${
+                fatigue.winrateDeltaBB100 > 0 ? 'text-[#fb7185]' : 'text-zinc-400'
               }`}
             >
               {fatigue.winrateDeltaBB100 > 0 ? `-${fatigue.winrateDeltaBB100} bb/100` : `+${Math.abs(fatigue.winrateDeltaBB100)} bb/100`}
@@ -111,52 +101,46 @@ export const QuantDiagnosticModule: React.FC<QuantDiagnosticModuleProps> = ({ se
           </div>
         </div>
 
-        {/* Pilar 2: Rakeback Leverage (Fish Buffet) */}
-        <div className="p-4 rounded-xl bg-[#131b2e] border border-[rgba(255,255,255,0.08)] flex flex-col justify-between shadow-sm">
+        {/* Pilar 2: Fish Buffet Leverage */}
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] flex flex-col justify-between gap-3">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] text-[#64748b] uppercase tracking-wider font-semibold">
-                2. Apalancamiento Fish Buffet
-              </span>
-              <span className="px-1.5 py-0.2 rounded bg-[#ffb95f]/15 text-[#ffb95f] text-[9px] font-bold">
-                {rakeback.rakebackSharePct}% RB
+            <div className="flex items-center justify-between text-[11px] font-sans text-zinc-400">
+              <span>Retorno Fish Buffet</span>
+              <span className="text-[11px] font-mono text-zinc-400">
+                {rakeback.rakebackSharePct}% del beneficio
               </span>
             </div>
 
-            <div className="flex flex-col gap-1 my-1">
-              <div className="flex items-baseline justify-between">
-                <span className="font-sans text-[13px] font-bold text-[#f8fafc]">
-                  {rakeback.title}
-                </span>
-              </div>
-              <div className="w-full bg-[#050507] h-2 rounded-full overflow-hidden flex border border-[rgba(255,255,255,0.05)]">
+            <div className="flex flex-col gap-1.5 my-0.5">
+              <span className="font-sans text-[13px] font-semibold text-zinc-200">
+                {rakeback.title}
+              </span>
+              <div className="w-full bg-white/[0.04] h-1.5 rounded-full overflow-hidden flex">
                 <div
-                  className="bg-[#10b981] h-full transition-all"
+                  className="bg-[#34d399] h-full"
                   style={{ width: `${Math.max(0, 100 - rakeback.rakebackSharePct)}%` }}
-                  title="Ganancia en Mesa"
                 />
                 <div
-                  className="bg-[#ffb95f] h-full transition-all"
+                  className="bg-amber-400/80 h-full"
                   style={{ width: `${rakeback.rakebackSharePct}%` }}
-                  title="Rakeback Fish Buffet"
                 />
               </div>
-              <div className="flex justify-between text-[9px] text-[#64748b]">
+              <div className="flex justify-between text-[10px] font-sans text-zinc-500">
                 <span>Mesa: ${rakeback.totalDirectUSD.toFixed(2)}</span>
-                <span className="text-[#ffb95f]">RB: +${rakeback.totalRakebackUSD.toFixed(2)}</span>
+                <span className="text-zinc-400">RB: +${rakeback.totalRakebackUSD.toFixed(2)}</span>
               </div>
             </div>
 
-            <p className="font-sans text-[11px] text-[#dae2fd] leading-relaxed">
+            <p className="text-[12px] text-zinc-400 font-sans leading-relaxed">
               {rakeback.description}
             </p>
           </div>
 
-          <div className="pt-2 mt-2 border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between text-[10px] text-[#64748b]">
+          <div className="pt-2 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-zinc-500 font-sans">
             <span>Neto Consolidado:</span>
             <span
-              className={`font-bold tabular-nums ${
-                rakeback.totalNetUSD >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'
+              className={`font-mono font-medium ${
+                rakeback.totalNetUSD >= 0 ? 'text-zinc-200' : 'text-[#fb7185]'
               }`}
             >
               {rakeback.totalNetUSD >= 0 ? '+' : ''}${rakeback.totalNetUSD.toFixed(2)} USD
@@ -165,44 +149,42 @@ export const QuantDiagnosticModule: React.FC<QuantDiagnosticModuleProps> = ({ se
         </div>
 
         {/* Pilar 3: Consistencia & Varianza */}
-        <div className="p-4 rounded-xl bg-[#131b2e] border border-[rgba(255,255,255,0.08)] flex flex-col justify-between shadow-sm">
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] flex flex-col justify-between gap-3">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] text-[#64748b] uppercase tracking-wider font-semibold">
-                3. Consistencia &amp; Disciplina
-              </span>
-              <span className="text-[10px] text-[#38bdf8] font-bold">
-                {consistency.avgTiltScore}/10 Tilt
+            <div className="flex items-center justify-between text-[11px] font-sans text-zinc-400">
+              <span>Disciplina &amp; Rachas</span>
+              <span className="text-[11px] font-mono text-zinc-400">
+                {consistency.avgTiltScore}/10 Foco
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 p-2 rounded bg-[#050507] border border-[rgba(255,255,255,0.04)] my-1">
+            <div className="grid grid-cols-2 gap-2 p-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[11px] font-sans">
               <div>
-                <span className="text-[9px] text-[#64748b] block">Promedio Sesión</span>
-                <span className="text-[13px] font-bold text-[#f8fafc] tabular-nums">
+                <span className="text-zinc-500 block text-[10px]">Promedio Sesión</span>
+                <span className="font-mono font-bold text-zinc-200">
                   {consistency.avgHandsPerSession.toLocaleString()} m/ses
                 </span>
               </div>
               <div>
-                <span className="text-[9px] text-[#64748b] block">Racha Negativa</span>
+                <span className="text-zinc-500 block text-[10px]">Racha Negativa</span>
                 <span
-                  className={`text-[13px] font-bold tabular-nums ${
-                    consistency.negativeStreakDays >= 2 ? 'text-[#ef4444]' : 'text-[#10b981]'
+                  className={`font-mono font-bold ${
+                    consistency.negativeStreakDays >= 2 ? 'text-[#fb7185]' : 'text-zinc-200'
                   }`}
                 >
-                  {consistency.negativeStreakDays >= 2 ? `${consistency.negativeStreakDays} días consec.` : '0 días (Normal)'}
+                  {consistency.negativeStreakDays >= 2 ? `${consistency.negativeStreakDays} días` : '0 días'}
                 </span>
               </div>
             </div>
 
-            <p className="font-sans text-[11px] text-[#dae2fd] leading-relaxed">
+            <p className="text-[12px] text-zinc-400 font-sans leading-relaxed">
               {consistency.message}
             </p>
           </div>
 
-          <div className="pt-2 mt-2 border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between text-[10px] text-[#64748b]">
-            <span>Volumen Semanal Estimado:</span>
-            <span className="font-bold text-[#38bdf8] tabular-nums">
+          <div className="pt-2 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-zinc-500 font-sans">
+            <span>Volumen Semanal:</span>
+            <span className="font-mono text-zinc-400">
               ~{consistency.estimatedWeeklyHands.toLocaleString()} manos
             </span>
           </div>

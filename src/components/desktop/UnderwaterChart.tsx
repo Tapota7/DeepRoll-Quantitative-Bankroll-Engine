@@ -204,113 +204,93 @@ export const UnderwaterChart: React.FC<UnderwaterChartProps> = ({ ledger, sessio
   const capacityMultiples = worstStreakAbs > 0 ? (ledger.currentBalance / worstStreakAbs).toFixed(1) : '∞';
 
   return (
-    <div className="flex flex-col justify-between bg-[#131b2e] rounded-xl border border-[rgba(255,255,255,0.08)] p-5 shadow-sm h-full">
+    <div className="flex flex-col justify-between bg-[#111218] rounded-2xl border border-white/[0.06] p-6 h-full">
       {/* Header */}
-      <div className="flex flex-col gap-1 pb-2 border-b border-[rgba(255,255,255,0.08)]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[20px] text-[#ef4444]">trending_down</span>
-            <h2 className="text-[16px] font-bold text-[#f8fafc] tracking-tight font-sans">
-              Análisis de Rachas Negativas
-            </h2>
-          </div>
-          <span className="px-1.5 py-0.5 rounded bg-[#450a0a]/50 text-[#ef4444] font-mono text-[10px] font-bold border border-[#ef4444]/30">
-            ≥ 2 DÍAS EN PÉRDIDAS
-          </span>
+      <div className="flex items-center justify-between pb-3 border-b border-white/[0.04]">
+        <div>
+          <h2 className="text-[15px] font-semibold text-zinc-100 font-sans tracking-tight">
+            Rachas Negativas
+          </h2>
+          <p className="text-[12px] text-zinc-500 font-sans mt-0.5">
+            Supervisión de pérdidas continuadas (≥ 2 días)
+          </p>
         </div>
-        <p className="text-[11px] text-[#64748b] font-mono leading-tight">
-          Supervisión estricta de downswings continuados por días de juego para control de riesgo y blindaje de banca.
-        </p>
+        <span className="text-[11px] font-sans text-zinc-400 bg-white/[0.04] px-2 py-0.5 rounded-lg border border-white/[0.06]">
+          Riesgo &amp; Drawdown
+        </span>
       </div>
 
       {/* Primary Telemetry: Estado Actual vs Máximo Histórico */}
-      <div className="grid grid-cols-2 gap-2 my-2 font-mono">
+      <div className="grid grid-cols-2 gap-3 my-3">
         {/* Drawdown Actual de Racha */}
         <div
-          className={`p-2.5 rounded-lg border flex flex-col justify-between transition-all ${
+          className={`p-3 rounded-xl border flex flex-col justify-between transition-colors ${
             streakAnalysis.isCurrentActiveStreak
-              ? 'bg-[#450a0a]/30 border-[#ef4444]/50 shadow-[0_0_15px_rgba(239,68,68,0.15)]'
-              : streakAnalysis.currentLosingDaysCount === 1
-              ? 'bg-[#050507] border-[#eab308]/30'
-              : 'bg-[#050507] border-[rgba(255,255,255,0.08)]'
+              ? 'bg-[#fb7185]/10 border-[#fb7185]/30'
+              : 'bg-white/[0.02] border-white/[0.06]'
           }`}
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] text-[#64748b] uppercase">Drawdown Actual</span>
-            {streakAnalysis.isCurrentActiveStreak ? (
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ef4444] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ef4444]"></span>
-              </span>
-            ) : (
-              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
-            )}
-          </div>
+          <span className="text-[11px] text-zinc-400 font-sans">Drawdown Actual</span>
 
-          <div className="my-1">
+          <div className="my-1.5">
             <div
-              className={`text-[16px] font-bold tabular-nums ${
+              className={`text-[18px] font-bold font-mono tabular-nums ${
                 streakAnalysis.isCurrentActiveStreak
-                  ? 'text-[#ef4444]'
+                  ? 'text-[#fb7185]'
                   : streakAnalysis.currentLosingDaysCount === 1
-                  ? 'text-[#eab308]'
-                  : 'text-[#10b981]'
+                  ? 'text-amber-400'
+                  : 'text-zinc-100'
               }`}
             >
               {streakAnalysis.currentLosingDaysCount > 0
                 ? `-$${Math.abs(streakAnalysis.currentLosingMoney).toFixed(2)}`
-                : '$0.00 USD'}
+                : '$0.00'}
             </div>
-            <div className="text-[10px] mt-0.5">
+            <div className="text-[11px] text-zinc-400 font-sans mt-0.5">
               {streakAnalysis.isCurrentActiveStreak ? (
-                <span className="text-[#ef4444] font-bold">
-                  {streakAnalysis.currentLosingDaysCount} Días en Racha ({streakAnalysis.currentLosingCajas.toFixed(1)} cx)
+                <span className="text-[#fb7185] font-medium">
+                  {streakAnalysis.currentLosingDaysCount} días en racha ({streakAnalysis.currentLosingCajas.toFixed(1)} cx)
                 </span>
               ) : streakAnalysis.currentLosingDaysCount === 1 ? (
-                <span className="text-[#eab308]">
-                  1 Día aislado ({streakAnalysis.currentLosingCajas.toFixed(1)} cx)
-                </span>
+                <span className="text-amber-400">1 día aislado</span>
               ) : (
-                <span className="text-[#10b981] font-semibold">Sin racha negativa activa</span>
+                <span className="text-[#34d399]">Sin racha activa</span>
               )}
             </div>
           </div>
 
-          <span className="text-[9px] text-[#64748b]">
-            {streakAnalysis.isCurrentActiveStreak ? 'Alerta de riesgo activa' : 'Banca protegida'}
+          <span className="text-[10px] text-zinc-500 font-sans">
+            {streakAnalysis.isCurrentActiveStreak ? 'Alerta de stop-loss' : 'Banca protegida'}
           </span>
         </div>
 
         {/* Máximo Histórico de Rachas Negativas */}
-        <div className="p-2.5 rounded-lg bg-[#050507] border border-[rgba(255,255,255,0.08)] flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] text-[#64748b] uppercase">Peor Racha Histórica</span>
-            <span className="material-symbols-outlined text-[14px] text-[#ef4444]">history_toggle_off</span>
-          </div>
+        <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between">
+          <span className="text-[11px] text-zinc-400 font-sans">Peor Racha Histórica</span>
 
-          <div className="my-1">
-            <div className="text-[16px] font-bold text-[#ef4444] tabular-nums">
+          <div className="my-1.5">
+            <div className="text-[18px] font-bold text-[#fb7185] font-mono tabular-nums">
               {streakAnalysis.maxLossMoney !== 0 ? `-$${Math.abs(streakAnalysis.maxLossMoney).toFixed(2)}` : '$0.00'}
             </div>
-            <div className="text-[10px] text-[#94a3b8] font-semibold mt-0.5">
+            <div className="text-[11px] text-zinc-400 font-sans mt-0.5">
               {streakAnalysis.maxHistoricalDays > 0 ? (
                 <span>
-                  {streakAnalysis.maxHistoricalDays} días seguidos ({streakAnalysis.maxLossCajas.toFixed(1)} cx)
+                  {streakAnalysis.maxHistoricalDays} días ({streakAnalysis.maxLossCajas.toFixed(1)} cx)
                 </span>
               ) : (
-                <span>0 días seguidos</span>
+                <span>0 días</span>
               )}
             </div>
           </div>
 
-          <span className="text-[9px] text-[#64748b]">
-            {streakAnalysis.streaks.length} {streakAnalysis.streaks.length === 1 ? 'racha registrada' : 'rachas registradas'}
+          <span className="text-[10px] text-zinc-500 font-sans">
+            {streakAnalysis.streaks.length} {streakAnalysis.streaks.length === 1 ? 'racha previa' : 'rachas previas'}
           </span>
         </div>
       </div>
 
       {/* SVG Downswing & Negative Streak Chart */}
-      <div className="relative w-full h-44 bg-[#050507] rounded-lg p-2 border border-[rgba(255,255,255,0.08)] flex flex-col justify-start overflow-hidden">
+      <div className="relative w-full h-44 bg-white/[0.01] rounded-xl p-2 border border-white/[0.04] flex flex-col justify-start overflow-hidden">
         <svg className="w-full h-full" preserveAspectRatio="none" viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
           <defs>
             <linearGradient id="streakAreaGrad" x1="0" x2="0" y1="0" y2="1">

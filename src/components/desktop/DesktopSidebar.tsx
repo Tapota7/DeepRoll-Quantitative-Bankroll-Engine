@@ -25,43 +25,26 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   const totalCajas = (ledger.currentBalance / boxSize).toFixed(0);
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-[#131b2e] z-50 flex flex-col justify-between py-4 border-r border-[rgba(255,255,255,0.08)] shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-      <div className="flex flex-col gap-4">
+    <aside className="fixed left-0 top-0 h-full w-60 bg-[#0c0d12] z-50 flex flex-col justify-between py-5 border-r border-white/[0.06] select-none">
+      <div className="flex flex-col gap-6">
         {/* Brand */}
-        <div className="px-4 flex items-center justify-between">
+        <div className="px-5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-[#050507] border border-[rgba(255,255,255,0.16)] flex items-center justify-center rounded-lg shadow-inner">
-              <span className="material-symbols-outlined text-[#4edea3] text-[20px]">query_stats</span>
+            <div className="w-7 h-7 bg-white/[0.06] border border-white/[0.08] flex items-center justify-center rounded-lg">
+              <span className="material-symbols-outlined text-[#34d399] text-[18px]">query_stats</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-mono text-[16px] font-bold tracking-tight text-[#f8fafc] leading-none">
+              <span className="font-sans text-[15px] font-bold text-zinc-100 tracking-tight leading-none">
                 DeepRoll
               </span>
-              <span className="font-mono text-[10px] text-[#64748b] tracking-widest mt-1 uppercase font-semibold">
-                QUANT ENGINE v2.4
+              <span className="text-[10px] text-zinc-500 font-sans tracking-wide mt-1">
+                Bankroll Engine
               </span>
             </div>
           </div>
-          <span className="px-1.5 py-0.5 rounded bg-[#050507] text-[#adc6ff] font-mono text-[10px] font-semibold uppercase tracking-wider border border-[rgba(255,255,255,0.08)]">
-            PRO
+          <span className="px-1.5 py-0.5 rounded text-zinc-400 font-mono text-[9px] uppercase tracking-wider bg-white/[0.04] border border-white/[0.06]">
+            v2.4
           </span>
-        </div>
-
-        {/* Bankroll Snapshot Widget */}
-        <div className="px-3.5 py-2.5 mx-3 rounded-lg bg-[#050507] border border-[rgba(255,255,255,0.08)] flex flex-col gap-1.5 shadow-sm">
-          <div className="flex items-center justify-between text-[11px] font-mono">
-            <span className="text-[#64748b] font-medium tracking-wider uppercase">Banca Total</span>
-            <span className="flex items-center gap-1.5 text-[#10b981] text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#064e3b]/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse"></span>
-              SAFE ({totalCajas} cx)
-            </span>
-          </div>
-          <div className="flex items-baseline justify-between">
-            <span className="font-mono text-[18px] font-bold text-[#f8fafc] tabular-nums tracking-tight">
-              ${ledger.currentBalance.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </span>
-            <span className="font-mono text-[11px] text-[#10b981] font-semibold">+40.8% ROI</span>
-          </div>
         </div>
 
         {/* Navigation Menu */}
@@ -72,13 +55,13 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onSelectTab(item.id)}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-[13px] text-left cursor-pointer ${
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-[13px] font-sans text-left cursor-pointer ${
                   isActive
-                    ? 'bg-[#222a3d] text-[#4edea3] font-semibold border border-[rgba(255,255,255,0.16)] shadow-sm'
-                    : 'text-[#94a3b8] hover:bg-[#222a3d] hover:text-[#f8fafc] font-medium'
+                    ? 'bg-white/[0.08] text-white font-semibold'
+                    : 'text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200'
                 }`}
               >
-                <span className={`material-symbols-outlined text-[19px] ${isActive ? 'text-[#4edea3]' : ''}`}>
+                <span className={`material-symbols-outlined text-[18px] ${isActive ? 'text-[#34d399]' : 'text-zinc-500'}`}>
                   {item.icon}
                 </span>
                 <span>{item.label}</span>
@@ -88,42 +71,30 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
         </nav>
       </div>
 
-      {/* Bottom User / Telemetry */}
+      {/* Bottom Area: Calm Balance Pill & Profile */}
       <div className="px-3 flex flex-col gap-3">
-        <div className="p-3 rounded-lg bg-[#050507] border border-[rgba(255,255,255,0.08)] flex flex-col gap-1.5 font-mono text-[11px]">
-          <div className="flex items-center justify-between text-[#64748b]">
-            <span>RUN RATE</span>
-            <span className="text-[#10b981] font-semibold tabular-nums">+39.3 bb/100</span>
+        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex flex-col gap-1">
+          <div className="flex items-center justify-between text-[10px] font-sans text-zinc-500 uppercase tracking-wider">
+            <span>Banca Activa</span>
+            <span className="font-mono text-zinc-400">{totalCajas} cx</span>
           </div>
-          <div className="flex items-center justify-between text-[#64748b]">
-            <span>SHARPE RATIO</span>
-            <span className="text-[#38bdf8] font-semibold tabular-nums">1.84 (Alto)</span>
-          </div>
-          <div className="flex items-center justify-between text-[#64748b]">
-            <span>RUIN PROB.</span>
-            <span className="text-[#f8fafc] font-semibold tabular-nums">&lt; 0.01%</span>
+          <div className="font-mono text-[16px] font-bold text-zinc-100 tabular-nums">
+            ${ledger.currentBalance.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-2 pt-1 border-t border-[rgba(255,255,255,0.08)]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#1e293b] border border-[rgba(255,255,255,0.08)] flex items-center justify-center font-mono font-bold text-[12px] text-[#4edea3]">
+        <div className="flex items-center justify-between px-2 pt-2 border-t border-white/[0.06]">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.06] flex items-center justify-center font-sans font-bold text-[11px] text-zinc-300">
               HG
             </div>
             <div className="flex flex-col">
-              <span className="text-[12px] font-medium text-[#f8fafc] truncate max-w-[105px]">
+              <span className="text-[12px] font-medium text-zinc-200 truncate max-w-[110px]">
                 Hero Grinder
               </span>
-              <span className="font-mono text-[10px] text-[#64748b]">PRO PASS • NL5</span>
+              <span className="text-[10px] text-zinc-500 font-sans">GGPoker Cash</span>
             </div>
           </div>
-          <button
-            className="text-[#94a3b8] hover:text-[#f8fafc] transition-colors p-1"
-            title="Cerrar sesión / Perfil"
-            type="button"
-          >
-            <span className="material-symbols-outlined text-[18px]">logout</span>
-          </button>
         </div>
       </div>
     </aside>

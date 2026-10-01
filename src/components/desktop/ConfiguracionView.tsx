@@ -75,42 +75,42 @@ export const ConfiguracionView: React.FC<ConfiguracionViewProps> = ({
       </div>
 
       {/* Starting capital form */}
-      <div className="p-5 rounded-xl bg-[#0f172a] border border-[rgba(255,255,255,0.08)] space-y-4">
+      <div className="p-6 rounded-2xl bg-[#111218] border border-white/[0.06] space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-sans text-[15px] font-bold text-[#f8fafc]">
+            <h3 className="font-sans text-[15px] font-bold text-zinc-100">
               Capital Inicial del Ciclo
             </h3>
-            <p className="font-sans text-[12px] text-[#94a3b8] mt-0.5">
+            <p className="font-sans text-[12px] text-zinc-400 mt-0.5">
               Define la base de partida sobre la cual se calculan el ROI%, la curva de crecimiento y el factor de recuperación.
             </p>
           </div>
-          <span className="text-[11px] text-[#10b981] font-bold">
+          <span className="text-[12px] text-[#34d399] font-mono font-bold">
             Actual: ${ledger.initialBalance.toFixed(2)} USD
           </span>
         </div>
 
         <form onSubmit={handleSave} className="flex items-center gap-3 max-w-md">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-2 text-[#64748b]">$</span>
+            <span className="absolute left-3 top-2 text-zinc-500">$</span>
             <input
               type="number"
               step="0.01"
               value={startingVal}
               onChange={(e) => setStartingVal(e.target.value)}
-              className="w-full bg-[#050507] py-2 pl-7 pr-3 rounded-lg border border-[rgba(255,255,255,0.1)] text-[#f8fafc] font-bold outline-none focus:border-[#38bdf8] transition-colors"
+              className="w-full bg-white/[0.03] py-2 pl-7 pr-3 rounded-lg border border-white/[0.08] text-zinc-100 font-mono font-bold outline-none focus:border-[#34d399] transition-colors"
             />
           </div>
           <button
             type="submit"
-            className="px-4 py-2 bg-[#10b981] hover:bg-[#34d399] text-[#050507] font-bold rounded-lg transition-colors cursor-pointer"
+            className="px-4 py-2 bg-[#10b981] hover:bg-[#059669] text-[#090a0f] font-sans font-semibold rounded-lg transition-colors cursor-pointer"
           >
             Actualizar Base
           </button>
         </form>
 
         {savedNotice && (
-          <span className="text-[#10b981] font-semibold text-[11px] flex items-center gap-1 animate-in fade-in duration-200">
+          <span className="text-[#34d399] font-medium text-[11px] flex items-center gap-1 animate-in fade-in duration-200 font-sans">
             <span className="material-symbols-outlined text-[15px]">check_circle</span>
             Base de partida actualizada correctamente en el ledger.
           </span>
@@ -118,34 +118,34 @@ export const ConfiguracionView: React.FC<ConfiguracionViewProps> = ({
       </div>
 
       {/* Resiliencia, Backup y Exportación */}
-      <div className="p-5 rounded-xl bg-[#0f172a] border border-[rgba(255,255,255,0.08)] space-y-4">
+      <div className="p-6 rounded-2xl bg-[#111218] border border-white/[0.06] space-y-4">
         <div>
-          <h3 className="font-sans text-[15px] font-bold text-[#f8fafc]">
+          <h3 className="font-sans text-[15px] font-bold text-zinc-100">
             Resiliencia y Copias de Seguridad (Backup Seguro)
           </h3>
-          <p className="font-sans text-[12px] text-[#94a3b8] mt-0.5">
+          <p className="font-sans text-[12px] text-zinc-400 mt-0.5">
             Protege tu historial contra limpiezas accidentales del navegador o fallos de caché. Puedes exportar e importar cuando lo desees.
           </p>
         </div>
 
         {/* Resumen de Datos Locales */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-lg bg-[#050507] border border-[rgba(255,255,255,0.06)]">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06]">
           <div>
-            <span className="text-[10px] text-[#64748b] uppercase block">Sesiones Guardadas</span>
-            <span className="text-[16px] font-bold text-[#f8fafc] tabular-nums">
+            <span className="text-[10px] text-zinc-500 uppercase block font-sans">Sesiones Guardadas</span>
+            <span className="text-[16px] font-bold text-zinc-200 font-mono tabular-nums">
               {sessions.length} {sessions.length === 1 ? 'sesión' : 'sesiones'}
             </span>
           </div>
           <div>
-            <span className="text-[10px] text-[#64748b] uppercase block">Muestra de Manos</span>
-            <span className="text-[16px] font-bold text-[#38bdf8] tabular-nums">
+            <span className="text-[10px] text-zinc-500 uppercase block font-sans">Muestra de Manos</span>
+            <span className="text-[16px] font-bold text-zinc-200 font-mono tabular-nums">
               {totalHands.toLocaleString()} manos
             </span>
           </div>
           <div>
-            <span className="text-[10px] text-[#64748b] uppercase block">Estado de Persistencia</span>
-            <span className="text-[16px] font-bold text-[#10b981] flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#10b981]"></span>
+            <span className="text-[10px] text-zinc-500 uppercase block font-sans">Estado de Persistencia</span>
+            <span className="text-[15px] font-medium text-[#34d399] flex items-center gap-1 font-sans">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#34d399]"></span>
               LocalStorage v2
             </span>
           </div>
@@ -156,18 +156,18 @@ export const ConfiguracionView: React.FC<ConfiguracionViewProps> = ({
           <button
             type="button"
             onClick={() => exportBackupJSON(ledger, sessions)}
-            className="px-3.5 py-2 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-[#38bdf8] font-semibold border border-[#38bdf8]/30 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+            className="px-3.5 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 font-sans font-medium border border-white/[0.08] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 text-[12px]"
           >
-            <span className="material-symbols-outlined text-[16px]">download</span>
+            <span className="material-symbols-outlined text-[16px] text-zinc-400">download</span>
             <span>Descargar Backup JSON</span>
           </button>
 
           <button
             type="button"
             onClick={() => exportBackupCSV(sessions)}
-            className="px-3.5 py-2 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-[#10b981] font-semibold border border-[#10b981]/30 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+            className="px-3.5 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 font-sans font-medium border border-white/[0.08] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 text-[12px]"
           >
-            <span className="material-symbols-outlined text-[16px]">table_view</span>
+            <span className="material-symbols-outlined text-[16px] text-zinc-400">table_view</span>
             <span>Exportar CSV (Excel / Sheets)</span>
           </button>
 
@@ -183,19 +183,19 @@ export const ConfiguracionView: React.FC<ConfiguracionViewProps> = ({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="px-3.5 py-2 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-[#ffb95f] font-semibold border border-[#ffb95f]/30 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+            className="px-3.5 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 font-sans font-medium border border-white/[0.08] transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 text-[12px]"
           >
-            <span className="material-symbols-outlined text-[16px]">upload_file</span>
+            <span className="material-symbols-outlined text-[16px] text-zinc-400">upload_file</span>
             <span>Restaurar Backup JSON</span>
           </button>
         </div>
 
         {importStatus && (
           <div
-            className={`p-3 rounded-lg border text-[11px] flex items-center gap-2 animate-in fade-in duration-200 ${
+            className={`p-3 rounded-xl border text-[11px] font-sans flex items-center gap-2 animate-in fade-in duration-200 ${
               importStatus.type === 'success'
-                ? 'bg-[#064e3b]/30 border-[#10b981]/40 text-[#6ffbbe]'
-                : 'bg-[#7f1d1d]/30 border-[#ef4444]/40 text-[#fca5a5]'
+                ? 'bg-[#34d399]/10 border-[#34d399]/30 text-[#34d399]'
+                : 'bg-[#fb7185]/10 border-[#fb7185]/30 text-[#fb7185]'
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">
@@ -207,12 +207,12 @@ export const ConfiguracionView: React.FC<ConfiguracionViewProps> = ({
       </div>
 
       {/* Zona de peligro: Reset */}
-      <div className="p-5 rounded-xl bg-[#0f172a] border border-[#ef4444]/20 space-y-4">
+      <div className="p-6 rounded-2xl bg-[#111218] border border-red-500/20 space-y-4">
         <div>
-          <h3 className="font-sans text-[15px] font-bold text-[#ef4444]">
+          <h3 className="font-sans text-[15px] font-bold text-red-400">
             Zona de Peligro: Restablecer Motor
           </h3>
-          <p className="font-sans text-[12px] text-[#94a3b8] mt-0.5">
+          <p className="font-sans text-[12px] text-zinc-400 mt-0.5">
             Borra permanentemente todas las sesiones registradas y devuelve los balances a cero. Te recomendamos exportar un backup antes de proceder.
           </p>
         </div>
@@ -221,7 +221,7 @@ export const ConfiguracionView: React.FC<ConfiguracionViewProps> = ({
           <button
             type="button"
             onClick={onResetData}
-            className="px-4 py-2 bg-[#1e293b] hover:bg-[#7f1d1d] text-[#ef4444] rounded-lg border border-[#ef4444]/40 transition-colors flex items-center gap-1.5 cursor-pointer font-bold active:scale-95"
+            className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg border border-red-500/30 transition-colors flex items-center gap-1.5 cursor-pointer font-sans font-semibold text-[12px] active:scale-95"
           >
             <span className="material-symbols-outlined text-[16px]">delete_forever</span>
             <span>Borrar Todo y Dejar en Cero</span>

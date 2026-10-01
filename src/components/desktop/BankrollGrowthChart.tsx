@@ -33,20 +33,51 @@ export const BankrollGrowthChart: React.FC<BankrollGrowthChartProps> = ({ ledger
       id: s.id,
       date: s.date,
       balance: running,
-      profit: (s.netProfit >= 0 ? '+' : '') + s.netProfit.toFixed(2),
+      netProfit: s.netProfit,
     };
   });
 
   const totalSessions = pointsData.length;
-  const periodProfit = sortedSessions.reduce((acc, s) => acc + s.netProfit, 0);
 
-  // Map to SVG coordinates: width 760, height 260
-  // X: from 60 to 735
-  // Y: from 230 (min) to 36 (max)
-  const rangeY = Math.max(maxBal - minBal, 100);
+  const formatUnit = (usd: number) => {
+    if (viewUnit === 'cajas') return `${(usd / boxSize).toFixed(1)} cx`;
+    if (viewUnit === 'bb') return `${(usd / (boxSize / 100)).toLocaleString('es-ES', { maximumFractionDigits: 0 })} bb`;
+    return `$${usd.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
+  if (totalSessions === 0) {
+    return (
+      <div className="flex flex-col justify-between bg-[#111218] rounded-2xl border border-white/[0.06] p-6 h-80">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-[15px] font-semibold text-zinc-100 font-sans tracking-tight">
+              Evolución de Capital
+            </h2>
+            <p className="text-[12px] text-zinc-500 font-sans mt-0.5">
+              Trayectoria de banca en el tiempo
+            </p>
+          </div>
+          <div className="text-[12px] text-zinc-500 font-mono">0 sesiones</div>
+        </div>
+
+        <div className="flex flex-col items-center justify-center my-auto gap-2 text-center">
+          <span className="material-symbols-outlined text-zinc-600 text-[32px]">show_chart</span>
+          <p className="text-[13px] text-zinc-400 font-sans">
+            Sin sesiones registradas en este rango
+          </p>
+          <span className="text-[11px] text-zinc-600 font-sans">
+            Comienza registrando tu primera sesión para trazar la curva
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // Map to SVG coordinates: width 760, height 220
+  const rangeY = Math.max(maxBal - minBal, 50);
   const chartPoints = pointsData.map((p, idx) => {
-    const x = totalSessions > 1 ? 60 + (idx / (totalSessions - 1)) * 675 : 400;
-    const y = 230 - ((p.balance - minBal) / rangeY) * 190;
+    const x = totalSessions > 1 ? 40 + (idx / (totalSessions - 1)) * 680 : 380;
+    const y = 200 - ((p.balance - minBal) / rangeY) * 160;
     return {
       x: Math.round(x),
       y: Math.round(y),
@@ -54,221 +85,119 @@ export const BankrollGrowthChart: React.FC<BankrollGrowthChartProps> = ({ ledger
       id: p.id,
       date: p.date,
       balance: p.balance,
-      profit: p.profit,
+      netProfit: p.netProfit,
       isATH: idx === athIdx,
       isCurrent: idx === totalSessions - 1,
     };
   });
 
-  const pointsString =
-    chartPoints.length > 0
-      ? chartPoints.map((p) => `${p.x},${p.y}`).join(' ')
-      : '60,230 735,230';
-  const polygonPoints =
-    chartPoints.length > 0
-      ? `60,240 ${pointsString} ${chartPoints[chartPoints.length - 1].x},240`
-      : '60,240 735,240';
+  const pointsString = chartPoints.map((p) => `${p.x},${p.y}`).join(' ');
+  const polygonPoints = `40,210 ${pointsString} ${chartPoints[chartPoints.length - 1].x},210`;
 
-  const formatUnit = (usd: number) => {
-    if (viewUnit === 'cajas') return `${(usd / boxSize).toFixed(1)} cx`;
-    if (viewUnit === 'bb') return `${(usd / (boxSize / 100)).toLocaleString('es-ES', { maximumFractionDigits: 0 })} bb`;
-    return `$${usd.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
-  };
+  const hoveredPoint = hoveredIndex !== null ? chartPoints[hoveredIndex] : null;
 
   return (
-    <div className="flex flex-col bg-[#131b2e] rounded-xl border border-[rgba(255,255,255,0.08)] p-5 shadow-sm relative overflow-hidden">
-      {/* Subtle Ambient Background Glow */}
-      <div className="absolute -right-20 -top-20 w-80 h-80 bg-[#10b981]/5 rounded-full blur-3xl pointer-events-none"></div>
-
-      {/* Header + View Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[rgba(255,255,255,0.08)]">
-        <div className="flex flex-col">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[20px] text-[#10b981]">trending_up</span>
-            <h2 className="text-[17px] font-bold text-[#f8fafc] tracking-tight font-sans">
-              Evolución de Banca &amp; Capital en Periodo
-            </h2>
-            <span className="px-2 py-0.5 rounded bg-[#050507] text-[#10b981] font-mono text-[10px] font-bold border border-[#10b981]/20">
-              {sessions.length} SESIONES
-            </span>
-          </div>
-          <p className="text-[11px] text-[#64748b] font-mono mt-0.5">
-            Curva de crecimiento recalculada dinámicamente según el rango de fechas seleccionado
+    <div className="flex flex-col bg-[#111218] rounded-2xl border border-white/[0.06] p-6 relative">
+      {/* Header + Minimalist View Selector */}
+      <div className="flex items-center justify-between gap-4 pb-4 border-b border-white/[0.04]">
+        <div>
+          <h2 className="text-[15px] font-semibold text-zinc-100 font-sans tracking-tight">
+            Evolución de Capital
+          </h2>
+          <p className="text-[12px] text-zinc-500 font-sans mt-0.5">
+            {formatUnit(running)} • {totalSessions} {totalSessions === 1 ? 'sesión' : 'sesiones'}
           </p>
         </div>
 
-        {/* Interactive View Switches */}
-        <div className="flex items-center bg-[#050507] p-1 rounded-lg border border-[rgba(255,255,255,0.08)] font-mono text-[11px]">
-          <button
-            onClick={() => setViewUnit('usd')}
-            className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
-              viewUnit === 'usd'
-                ? 'bg-[#1e293b] text-[#10b981] font-bold border border-[rgba(255,255,255,0.16)] shadow-sm'
-                : 'text-[#94a3b8] hover:text-[#f8fafc]'
-            }`}
-            type="button"
-          >
-            Banca ($)
-          </button>
-          <button
-            onClick={() => setViewUnit('cajas')}
-            className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
-              viewUnit === 'cajas'
-                ? 'bg-[#1e293b] text-[#10b981] font-bold border border-[rgba(255,255,255,0.16)] shadow-sm'
-                : 'text-[#94a3b8] hover:text-[#f8fafc]'
-            }`}
-            type="button"
-          >
-            Cajas (cx)
-          </button>
-          <button
-            onClick={() => setViewUnit('bb')}
-            className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
-              viewUnit === 'bb'
-                ? 'bg-[#1e293b] text-[#10b981] font-bold border border-[rgba(255,255,255,0.16)] shadow-sm'
-                : 'text-[#94a3b8] hover:text-[#f8fafc]'
-            }`}
-            type="button"
-          >
-            Ciegas (bb)
-          </button>
+        {/* View Switches */}
+        <div className="flex items-center bg-white/[0.03] p-1 rounded-xl border border-white/[0.06] font-sans text-[11px]">
+          {(['usd', 'cajas', 'bb'] as const).map((unit) => (
+            <button
+              key={unit}
+              onClick={() => setViewUnit(unit)}
+              className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
+                viewUnit === unit
+                  ? 'bg-white/[0.1] text-white font-medium shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+              type="button"
+            >
+              {unit === 'usd' ? 'USD ($)' : unit === 'cajas' ? 'Cajas (cx)' : 'Ciegas (bb)'}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Metric Highlight Callout Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 my-1 border-b border-[rgba(255,255,255,0.08)] font-mono">
-        <div className="flex flex-col">
-          <span className="text-[10px] text-[#64748b] uppercase tracking-wider">Saldo Final Rango</span>
-          <span className="text-[18px] font-bold text-[#f8fafc] tabular-nums leading-snug">
-            {formatUnit(running)}
-          </span>
-          <span className="text-[11px] text-[#10b981] font-semibold">
-            {running >= 0 ? '+' : ''}{(running / boxSize).toFixed(1)} Cajas (100bb)
-          </span>
-        </div>
-
-        <div className="flex flex-col">
-          <span className="text-[10px] text-[#64748b] uppercase tracking-wider">Beneficio Periodo</span>
-          <span className={`text-[18px] font-bold tabular-nums leading-snug ${periodProfit >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'}`}>
-            {periodProfit >= 0 ? `+$${periodProfit.toFixed(2)}` : `-$${Math.abs(periodProfit).toFixed(2)}`}
-          </span>
-          <span className="text-[11px] text-[#94a3b8]">
-            {periodProfit >= 0 ? '+' : ''}{(periodProfit / boxSize).toFixed(1)} cx de impacto
-          </span>
-        </div>
-
-        <div className="flex flex-col">
-          <span className="text-[10px] text-[#64748b] uppercase tracking-wider">Pico Máximo Periodo</span>
-          <span className="text-[18px] font-bold text-[#f8fafc] tabular-nums leading-snug">
-            ${maxBal.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </span>
-          <span className="text-[11px] text-[#64748b] font-medium">ATH del rango</span>
-        </div>
-
-        <div className="flex flex-col">
-          <span className="text-[10px] text-[#64748b] uppercase tracking-wider">Muestra en Filtro</span>
-          <span className="text-[18px] font-bold text-[#38bdf8] tabular-nums leading-snug">
-            {totalSessions} sesiones
-          </span>
-          <span className="text-[11px] text-[#64748b] font-medium">
-            {sortedSessions.reduce((a, b) => a + b.hands, 0).toLocaleString()} manos
-          </span>
-        </div>
-      </div>
-
-      {/* High Fidelity SVG Bankroll Growth Chart */}
-      <div className="relative w-full h-72 bg-[#050507] rounded-lg p-3 mt-2 border border-[rgba(255,255,255,0.08)] flex flex-col justify-end overflow-hidden">
-        {/* Background Grid lines */}
-        <div className="absolute inset-0 flex flex-col justify-between p-4 pointer-events-none opacity-20">
-          <div className="w-full border-b border-dashed border-[#64748b]"></div>
-          <div className="w-full border-b border-dashed border-[#64748b]"></div>
-          <div className="w-full border-b border-dashed border-[#64748b]"></div>
-          <div className="w-full border-b border-dashed border-[#64748b]"></div>
-          <div className="w-full border-b border-dashed border-[#64748b]"></div>
-        </div>
-
-        <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 760 260">
+      {/* SVG Canvas */}
+      <div className="relative w-full h-64 pt-3 flex flex-col justify-end">
+        <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 760 220">
           <defs>
-            <linearGradient id="bankrollGrad" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="#10b981" stopOpacity="0.38"></stop>
-              <stop offset="60%" stopColor="#10b981" stopOpacity="0.08"></stop>
-              <stop offset="100%" stopColor="#10b981" stopOpacity="0.00"></stop>
-            </linearGradient>
-            <linearGradient id="trendGrad" x1="0" x2="1" y1="0" y2="0">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.2"></stop>
-              <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.9"></stop>
+            <linearGradient id="soberBankrollGrad" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#34d399" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#34d399" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
-          {/* Y-Axis Ticks & Labels */}
-          <text fill="#64748b" fontFamily="JetBrains Mono" fontSize="9" x="12" y="24">${maxBal.toFixed(0)}</text>
-          <text fill="#64748b" fontFamily="JetBrains Mono" fontSize="9" x="12" y="132">${((maxBal + minBal) / 2).toFixed(0)}</text>
-          <text fill="#64748b" fontFamily="JetBrains Mono" fontSize="9" x="12" y="240">${minBal.toFixed(0)}</text>
+          {/* Grid lines */}
+          <line stroke="rgba(255,255,255,0.04)" strokeDasharray="3 3" x1="40" x2="720" y1="40" y2="40" />
+          <line stroke="rgba(255,255,255,0.04)" strokeDasharray="3 3" x1="40" x2="720" y1="120" y2="120" />
+          <line stroke="rgba(255,255,255,0.04)" strokeDasharray="3 3" x1="40" x2="720" y1="200" y2="200" />
 
-          {/* Baseline */}
-          <line stroke="#64748b" strokeDasharray="3 3" strokeWidth="1.2" x1="60" x2="745" y1="240" y2="240"></line>
+          {/* Y-Axis Label values */}
+          <text fill="#71717a" fontFamily="sans-serif" fontSize="10" x="5" y="44">{formatUnit(maxBal)}</text>
+          <text fill="#71717a" fontFamily="sans-serif" fontSize="10" x="5" y="204">{formatUnit(minBal)}</text>
 
-          {/* Bankroll Filled Gradient Polygon */}
-          <polygon fill="url(#bankrollGrad)" points={polygonPoints}></polygon>
+          {/* Gradient Fill */}
+          <polygon fill="url(#soberBankrollGrad)" points={polygonPoints} />
 
-          {/* Bankroll Solid Emerald Line */}
+          {/* Line */}
           <polyline
             fill="none"
             points={pointsString}
-            stroke="#10b981"
+            stroke="#34d399"
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth="2.6"
-          ></polyline>
+            strokeWidth="2.2"
+          />
 
-          {/* Points */}
+          {/* Interactive Points */}
           {chartPoints.map((p, idx) => (
             <circle
               key={idx}
               cx={p.x}
               cy={p.y}
-              r={p.isATH || p.isCurrent ? "5" : "3.5"}
-              fill={p.isATH ? "#10b981" : p.isCurrent ? "#38bdf8" : "#10b981"}
-              stroke="#050507"
-              strokeWidth="2"
-              className="cursor-pointer hover:r-6 transition-all"
+              r={hoveredIndex === idx ? "5.5" : "3.5"}
+              fill={p.isATH ? "#34d399" : "#111218"}
+              stroke="#34d399"
+              strokeWidth="1.8"
+              className="cursor-pointer transition-all"
               onMouseEnter={() => setHoveredIndex(idx)}
               onMouseLeave={() => setHoveredIndex(null)}
             />
           ))}
         </svg>
 
-        {/* Hover Tooltip */}
-        {hoveredIndex !== null && chartPoints[hoveredIndex] && (
-          <div className="absolute top-4 left-20 bg-[#1e293b] border border-[rgba(255,255,255,0.16)] px-3 py-1.5 rounded-lg text-xs font-mono shadow-xl z-20 pointer-events-none">
-            <span className="text-[#38bdf8] font-bold">Sesión {chartPoints[hoveredIndex].id}</span>
-            <span className="text-[#64748b]"> ({chartPoints[hoveredIndex].date})</span>
-            <span className="text-[#f8fafc] font-semibold block">
-              Banca: ${chartPoints[hoveredIndex].balance.toFixed(2)} USD
+        {/* Hover Floating Tooltip */}
+        {hoveredPoint && (
+          <div
+            className="absolute top-2 right-4 bg-[#181920] border border-white/[0.08] px-3 py-2 rounded-xl shadow-xl flex items-center gap-3 text-[12px] font-sans pointer-events-none"
+          >
+            <span className="font-mono text-zinc-400">{hoveredPoint.id}</span>
+            <span className="text-zinc-500">•</span>
+            <span className="text-zinc-300">{hoveredPoint.date}</span>
+            <span className="text-zinc-500">•</span>
+            <span className="font-mono font-bold text-zinc-100">
+              {formatUnit(hoveredPoint.balance)}
             </span>
-            <span className={chartPoints[hoveredIndex].profit.startsWith('+') ? 'text-[#10b981]' : 'text-[#ef4444]'}>
-              Resultado: {chartPoints[hoveredIndex].profit} USD
+            <span
+              className={`font-mono font-medium ${
+                hoveredPoint.netProfit >= 0 ? 'text-[#34d399]' : 'text-[#fb7185]'
+              }`}
+            >
+              ({hoveredPoint.netProfit >= 0 ? '+' : ''}${hoveredPoint.netProfit.toFixed(2)})
             </span>
           </div>
         )}
-      </div>
-
-      {/* Legend Footer */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 mt-1 font-mono text-[11px] text-[#94a3b8]">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5 text-[#f8fafc]">
-            <span className="w-3 h-0.5 bg-[#10b981] rounded"></span>
-            Curva de Banca Filtrada ($)
-          </span>
-          <span className="flex items-center gap-1.5 text-[#38bdf8]">
-            <span className="w-2 h-2 rounded-full bg-[#38bdf8]"></span>
-            Última Sesión del Periodo
-          </span>
-        </div>
-        <div className="flex items-center gap-1.5 text-[#64748b]">
-          <span className="material-symbols-outlined text-[14px] text-[#10b981]">verified</span>
-          <span>{sessions.length} sesiones en el rango activo</span>
-        </div>
       </div>
     </div>
   );

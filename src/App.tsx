@@ -322,7 +322,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b1326] text-[#dae2fd]">
+    <div className="min-h-screen bg-[#090a0f] text-zinc-100 font-sans selection:bg-[#34d399]/20 selection:text-white">
       {/* DESKTOP APP LAYOUT */}
       <div className="w-full min-h-screen">
         <DesktopSidebar
@@ -332,7 +332,7 @@ export default function App() {
           boxSize={activeBoxSize}
         />
 
-        <div className="pl-64">
+        <div className="pl-60">
           <DesktopHeader
             onOpenNewSessionModal={() => setIsNewSessionOpen(true)}
             activeTabTitle={tabTitles[desktopTab]}
@@ -341,102 +341,7 @@ export default function App() {
             stakeCounts={stakeCounts}
           />
 
-          <main className="w-full pt-20 px-6 pb-12 min-h-screen flex flex-col gap-5">
-            {/* Global Context Indicator & Quick Level Switcher */}
-            <div className="flex flex-col gap-2.5 p-3.5 rounded-xl bg-[#131b2e] border border-[rgba(255,255,255,0.08)] text-[#94a3b8] text-[12px] font-mono">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="text-[10px] text-[#64748b] uppercase tracking-wider font-semibold mr-1">
-                    Nivel / Stake:
-                  </span>
-                  {[
-                    { id: 'all', label: 'Todos los Niveles', color: '#10b981' },
-                    { id: 'NL5 Deep', label: 'NL5 ($0.05)', color: '#34d399' },
-                    { id: 'NL10 Deep', label: 'NL10 ($0.10)', color: '#38bdf8' },
-                    { id: 'NL25 Deep', label: 'NL25 ($0.25)', color: '#a855f7' },
-                    { id: 'NL50 Deep', label: 'NL50 ($0.50)', color: '#f59e0b' },
-                  ].map((lvl) => {
-                    const isSelected = selectedStake === lvl.id;
-                    const count = stakeCounts[lvl.id] ?? 0;
-                    return (
-                      <button
-                        key={lvl.id}
-                        type="button"
-                        onClick={() => setSelectedStake(lvl.id)}
-                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#050507] text-[#f8fafc] border border-[#10b981]/50 shadow-sm'
-                            : 'bg-[#050507]/60 text-[#94a3b8] border border-transparent hover:text-[#f8fafc] hover:border-[rgba(255,255,255,0.08)]'
-                        }`}
-                      >
-                        <span
-                          className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: lvl.color }}
-                        />
-                        <span>{lvl.label}</span>
-                        <span className="px-1 py-0.2 rounded bg-[#171f33] text-[9.5px] text-[#64748b]">
-                          {count}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
-                  <span className="text-[#f8fafc] font-semibold text-[11px]">
-                    {selectedStake === 'all'
-                      ? 'Consolidado Global • Promedio de todos los niveles'
-                      : `${selectedStake} • Filtrando ${filteredSessions.length} de ${sessions.length} sesiones`}
-                  </span>
-                </div>
-              </div>
-
-              {/* Telemetry Strip */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[rgba(255,255,255,0.06)] text-[#64748b] text-[11px]">
-                <div className="flex items-center gap-4">
-                  <span>
-                    Muestra:{' '}
-                    <strong className="text-[#f8fafc] tabular-nums">
-                      {filteredSessions.reduce((a, b) => a + b.hands, 0).toLocaleString()} manos
-                    </strong>
-                  </span>
-                  <span>•</span>
-                  <span>
-                    Días registrados:{' '}
-                    <strong className="text-[#f8fafc] tabular-nums">
-                      {filteredSessions.length} {filteredSessions.length === 1 ? 'día' : 'días'}
-                    </strong>
-                  </span>
-                  <span>•</span>
-                  <span>
-                    Winrate medio:{' '}
-                    <strong className="text-[#10b981] tabular-nums font-bold">
-                      {filteredSessions.reduce((a, b) => a + b.hands, 0) > 0
-                        ? `+${(filteredSessions.reduce((a, b) => a + (b.directProfit / b.bb), 0) / (filteredSessions.reduce((a, b) => a + b.hands, 0) / 100)).toFixed(1)} bb/100`
-                        : '0.0 bb/100'}
-                    </strong>
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span>
-                    Neto en periodo:{' '}
-                    <strong
-                      className={`tabular-nums ${
-                        filteredSessions.reduce((a, b) => a + b.netProfit, 0) >= 0
-                          ? 'text-[#10b981]'
-                          : 'text-[#ef4444]'
-                      }`}
-                    >
-                      {filteredSessions.reduce((a, b) => a + b.netProfit, 0) >= 0 ? '+' : ''}$
-                      {filteredSessions.reduce((a, b) => a + b.netProfit, 0).toFixed(2)} USD
-                    </strong>
-                  </span>
-                </div>
-              </div>
-            </div>
-
+          <main className="w-full pt-18 px-8 pb-12 min-h-screen flex flex-col gap-6 max-w-7xl mx-auto">
             {/* TAB ROUTING */}
             {desktopTab === 'analisis' && (
               <>

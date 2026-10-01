@@ -42,8 +42,8 @@
   html, body {
     margin: 0;
     padding: 0;
-    background-color: #0b1326;
-    color: #dae2fd;
+    background-color: #090a0f;
+    color: #e4e4e7;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }

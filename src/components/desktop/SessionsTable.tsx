@@ -64,16 +64,16 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
   };
 
   return (
-    <div className="flex flex-col bg-[#131b2e] rounded-xl border border-[rgba(255,255,255,0.08)] p-5 shadow-sm gap-4">
+    <div className="flex flex-col bg-[#111218] rounded-2xl border border-white/[0.06] p-6 shadow-sm gap-4">
       {/* Table Header & Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-[rgba(255,255,255,0.08)]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-white/[0.04]">
         <div className="flex items-center gap-2.5">
-          <span className="material-symbols-outlined text-[20px] text-[#4edea3]">receipt_long</span>
+          <span className="material-symbols-outlined text-[20px] text-[#34d399]">receipt_long</span>
           <div>
-            <h3 className="text-[16px] font-bold text-[#f8fafc] tracking-tight font-sans">
-              Auditoría Detallada y Conciliación de Sesiones
+            <h3 className="text-[15px] font-semibold text-zinc-100 tracking-tight font-sans">
+              Auditoría y Registro de Sesiones
             </h3>
-            <p className="text-[11px] text-[#64748b] font-mono">
+            <p className="text-[12px] text-zinc-500 font-sans">
               {sessions.length === totalSessionsCount
                 ? `Mostrando las ${sessions.length} sesiones registradas en GGPoker`
                 : `Filtro temporal activo: ${sessions.length} de ${totalSessionsCount} sesiones en el rango seleccionado`}
@@ -84,16 +84,16 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
         <div className="flex items-center gap-3 font-mono text-[11px]">
           <button
             onClick={() => setShowAll(!showAll)}
-            className="px-2.5 py-1 rounded bg-[#050507] hover:bg-[#1e293b] text-[#38bdf8] border border-[rgba(255,255,255,0.08)] transition-colors cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 border border-white/[0.06] transition-colors cursor-pointer"
           >
             {showAll ? 'Ver solo 5 recientes' : `Ver todas (${sessions.length})`}
           </button>
 
-          <span className="text-[#64748b]">Ordenar:</span>
+          <span className="text-zinc-500 font-sans">Ordenar:</span>
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="bg-[#050507] border border-[rgba(255,255,255,0.08)] text-[#f8fafc] px-2.5 py-1 rounded-lg outline-none cursor-pointer hover:border-[rgba(255,255,255,0.16)]"
+            className="bg-[#090a0f] border border-white/[0.08] text-zinc-200 px-2.5 py-1 rounded-lg outline-none cursor-pointer hover:border-white/[0.15]"
           >
             <option value="recent">Más reciente primero</option>
             <option value="profit">Mayor beneficio ($)</option>
@@ -124,7 +124,7 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
       <div className="w-full overflow-x-auto">
         <table className="w-full text-left border-collapse font-mono text-[12px]">
           <thead>
-            <tr className="bg-[#050507] text-[#64748b] text-[10px] tracking-wider uppercase border-b border-[rgba(255,255,255,0.08)]">
+            <tr className="bg-[#090a0f] text-zinc-500 text-[10px] tracking-wider uppercase border-b border-white/[0.06]">
               <th className="py-2.5 px-3"># ID</th>
               <th className="py-2.5 px-3">Fecha / Día</th>
               <th className="py-2.5 px-3">Operador</th>
@@ -140,7 +140,7 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
               <th className="py-2.5 px-3 text-center">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[rgba(255,255,255,0.08)]">
+          <tbody className="divide-y divide-white/[0.04]">
             {displaySessions.length === 0 ? (
               <tr>
                 <td colSpan={13} className="py-8 text-center text-[#64748b] font-mono">
@@ -249,33 +249,33 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
       </div>
 
       {/* Table Summary Footer */}
-      <div className="p-3 rounded-lg bg-[#050507] border border-[rgba(255,255,255,0.08)] flex flex-wrap items-center justify-between gap-3 text-[#94a3b8] font-mono text-[11px]">
+      <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex flex-wrap items-center justify-between gap-3 text-zinc-400 font-mono text-[11px]">
         <div className="flex items-center gap-2">
-          <span className="text-[#64748b] uppercase">
+          <span className="text-zinc-500 uppercase">
             Subtotal {sessions.length} {sessions.length === 1 ? 'Día' : 'Días'} en Filtro:
           </span>
-          <span className="text-[#f8fafc] font-bold">
+          <span className="text-zinc-100 font-bold">
             {totalHands.toLocaleString()} manos registradas
           </span>
         </div>
         <div className="flex items-center gap-4">
           <span>
             Ganancia Mesa:{' '}
-            <strong className={`font-bold tabular-nums ${totalDirect >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'}`}>
+            <strong className={`font-bold tabular-nums ${totalDirect >= 0 ? 'text-[#34d399]' : 'text-[#fb7185]'}`}>
               {totalDirect >= 0 ? `+$${totalDirect.toFixed(2)}` : `-$${Math.abs(totalDirect).toFixed(2)}`}
             </strong>
           </span>
           <span>
-            Rakeback: <strong className="text-[#ffb95f] font-bold">+${totalRakeback.toFixed(2)}</strong>
+            Rakeback: <strong className="text-[#fbbf24] font-bold">+${totalRakeback.toFixed(2)}</strong>
           </span>
           <span>
             Resultado neto:{' '}
-            <strong className={`font-bold tabular-nums ${totalNet >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'}`}>
+            <strong className={`font-bold tabular-nums ${totalNet >= 0 ? 'text-[#34d399]' : 'text-[#fb7185]'}`}>
               {totalNet >= 0 ? `+$${totalNet.toFixed(2)}` : `-$${Math.abs(totalNet).toFixed(2)}`} ({totalCajas >= 0 ? `+${totalCajas.toFixed(2)}` : totalCajas.toFixed(2)} cx)
             </strong>
           </span>
           <span>
-            Winrate: <strong className="text-[#10b981] font-bold">+{weightedWinrate} bb/100</strong>
+            Winrate: <strong className="text-[#34d399] font-bold">+{weightedWinrate} bb/100</strong>
           </span>
         </div>
       </div>

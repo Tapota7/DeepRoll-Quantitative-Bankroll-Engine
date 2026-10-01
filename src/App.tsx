@@ -12,17 +12,16 @@ import { DateRangePreset } from './components/desktop/DateRangeFilterBar';
 import { DesktopSidebar } from './components/desktop/DesktopSidebar';
 import { DesktopHeader } from './components/desktop/DesktopHeader';
 import { BankrollGrowthChart } from './components/desktop/BankrollGrowthChart';
-import { UnderwaterChart } from './components/desktop/UnderwaterChart';
-import { BancaRiesgoView } from './components/desktop/BancaRiesgoView';
-import { ConfiguracionView } from './components/desktop/ConfiguracionView';
-import { QuantDiagnosticModule } from './components/desktop/QuantDiagnosticModule';
+import { ActivityHeatmap } from './components/desktop/ActivityHeatmap';
+import { DailyProfitBarChart } from './components/desktop/DailyProfitBarChart';
+import { WeekdayProfitabilityChart } from './components/desktop/WeekdayProfitabilityChart';
 import { ExecutiveMetricsStrip } from './components/desktop/ExecutiveMetricsStrip';
-import { ExecutiveDetailTabs } from './components/desktop/ExecutiveDetailTabs';
+import { SessionsTable } from './components/desktop/SessionsTable';
+import { ConfiguracionView } from './components/desktop/ConfiguracionView';
 
 // Modals
 import { EditSessionDrawer } from './components/modals/EditSessionDrawer';
 import { DeleteSessionModal } from './components/modals/DeleteSessionModal';
-import { ShotPlannerModal } from './components/modals/ShotPlannerModal';
 import { NewSessionModal } from './components/modals/NewSessionModal';
 import { QuickTransactionModal } from './components/modals/QuickTransactionModal';
 import { useWebMCP } from './hooks/useWebMCP';
@@ -77,12 +76,11 @@ export default function App() {
   }, [ledger]);
 
   // Tab State
-  const [desktopTab, setDesktopTab] = useState<DesktopTab>('analisis');
+  const [desktopTab, setDesktopTab] = useState<DesktopTab>('resumen');
 
   // Modal States
   const [editingSession, setEditingSession] = useState<Session | null>(null);
   const [deletingSession, setDeletingSession] = useState<Session | null>(null);
-  const [isShotPlannerOpen, setIsShotPlannerOpen] = useState<boolean>(false);
   const [isNewSessionOpen, setIsNewSessionOpen] = useState<boolean>(false);
   const [quickTx, setQuickTx] = useState<{
     isOpen: boolean;
@@ -314,10 +312,10 @@ export default function App() {
   };
 
   const tabTitles: Record<DesktopTab, string> = {
-    resumen: 'Resumen General',
+    resumen: 'Dashboard',
     sesiones: 'Auditoría de Sesiones',
-    analisis: 'Análisis Avanzado',
-    banca: 'Banca & Gestión de Riesgo',
+    analisis: 'Dashboard',
+    banca: 'Dashboard',
     configuracion: 'Configuración del Motor',
   };
 
@@ -343,47 +341,6 @@ export default function App() {
 
           <main className="w-full pt-18 px-8 pb-12 min-h-screen flex flex-col gap-6 max-w-7xl mx-auto">
             {/* TAB ROUTING */}
-            {desktopTab === 'analisis' && (
-              <>
-                {/* 4 GOLDEN EXECUTIVE KPIS */}
-                <ExecutiveMetricsStrip
-                  ledger={ledger}
-                  sessions={filteredSessions}
-                  boxSize={activeBoxSize}
-                  selectedStake={selectedStake}
-                />
-
-                {/* LEVEL 1: DUAL CHART ROW (70/30) */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                  <div className="lg:col-span-8">
-                    <BankrollGrowthChart ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
-                  </div>
-                  <div className="lg:col-span-4">
-                    <UnderwaterChart ledger={ledger} sessions={filteredSessions} />
-                  </div>
-                </div>
-
-                {/* DIAGNOSTICO CUANTITATIVO, FATIGA & RAKEBACK LEVERAGE */}
-                <QuantDiagnosticModule sessions={filteredSessions} />
-
-                {/* ON-DEMAND ANALYTICAL DEPTH TABS (Default: Varianza, Matriz & Monte Carlo) */}
-                <ExecutiveDetailTabs
-                  sessions={filteredSessions}
-                  totalSessionsCount={sessions.length}
-                  onEditSession={(s) => setEditingSession(s)}
-                  onDeleteSession={(s) => setDeletingSession(s)}
-                  dateRangePreset={dateRangePreset}
-                  onSelectDatePreset={setDateRangePreset}
-                  startDate={customStartDate}
-                  endDate={customEndDate}
-                  onStartDateChange={setCustomStartDate}
-                  onEndDateChange={setCustomEndDate}
-                  onResetDateFilter={handleResetDateFilter}
-                  defaultSubTab="varianza"
-                />
-              </>
-            )}
-
             {desktopTab === 'resumen' && (
               <>
                 {/* 4 GOLDEN EXECUTIVE KPIS */}
@@ -394,21 +351,28 @@ export default function App() {
                   selectedStake={selectedStake}
                 />
 
-                {/* VISUAL HUB: EVOLUTION & UNDERWATER DRAWDOWN */}
+                {/* GITHUB-STYLE 6-MONTH ACTIVITY HEATMAP */}
+                <ActivityHeatmap sessions={filteredSessions} />
+
+                {/* DUAL INTERACTIVE CHARTS: DAILY PNL BARS & WEEKDAY PROFITABILITY */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                  <div className="lg:col-span-8">
-                    <BankrollGrowthChart ledger={ledger} sessions={filteredSessions} boxSize={activeBoxSize} />
+                  <div className="lg:col-span-7">
+                    <DailyProfitBarChart sessions={filteredSessions} />
                   </div>
-                  <div className="lg:col-span-4">
-                    <UnderwaterChart ledger={ledger} sessions={filteredSessions} />
+                  <div className="lg:col-span-5">
+                    <WeekdayProfitabilityChart sessions={filteredSessions} />
                   </div>
                 </div>
 
-                {/* DIAGNOSTIC COACH HEURISTICS */}
-                <QuantDiagnosticModule sessions={filteredSessions} />
+                {/* BANKROLL GROWTH EVOLUTION */}
+                <BankrollGrowthChart
+                  ledger={ledger}
+                  sessions={filteredSessions}
+                  boxSize={activeBoxSize}
+                />
 
-                {/* ON-DEMAND EXECUTIVE DETAIL TABS (Default: Sesiones) */}
-                <ExecutiveDetailTabs
+                {/* AUDITORÍA Y TABLA DE SESIONES */}
+                <SessionsTable
                   sessions={filteredSessions}
                   totalSessionsCount={sessions.length}
                   onEditSession={(s) => setEditingSession(s)}
@@ -420,13 +384,12 @@ export default function App() {
                   onStartDateChange={setCustomStartDate}
                   onEndDateChange={setCustomEndDate}
                   onResetDateFilter={handleResetDateFilter}
-                  defaultSubTab="sesiones"
                 />
               </>
             )}
 
             {desktopTab === 'sesiones' && (
-              <ExecutiveDetailTabs
+              <SessionsTable
                 sessions={filteredSessions}
                 totalSessionsCount={sessions.length}
                 onEditSession={(s) => setEditingSession(s)}
@@ -438,16 +401,6 @@ export default function App() {
                 onStartDateChange={setCustomStartDate}
                 onEndDateChange={setCustomEndDate}
                 onResetDateFilter={handleResetDateFilter}
-                defaultSubTab="sesiones"
-              />
-            )}
-
-            {desktopTab === 'banca' && (
-              <BancaRiesgoView
-                ledger={ledger}
-                boxSize={activeBoxSize}
-                onOpenTransactionModal={(type) => setQuickTx({ isOpen: true, type })}
-                onOpenShotPlanner={() => setIsShotPlannerOpen(true)}
               />
             )}
 
@@ -488,17 +441,7 @@ export default function App() {
         ledger={ledger}
       />
 
-      {/* 3. Shot Planner Modal */}
-      <ShotPlannerModal
-        isOpen={isShotPlannerOpen}
-        onClose={() => setIsShotPlannerOpen(false)}
-        ledger={ledger}
-        onConfirmProtocol={(stake, budget) => {
-          alert(`Protocolo de Shot-Taking para ${stake} activado: Reserva de $${budget} USD configurada con alerta de stop-loss.`);
-        }}
-      />
-
-      {/* 4. New Session Modal */}
+      {/* 3. New Session Modal */}
       <NewSessionModal
         isOpen={isNewSessionOpen}
         onClose={() => setIsNewSessionOpen(false)}
@@ -506,7 +449,7 @@ export default function App() {
         nextSessionNumber={sessions.length + 1}
       />
 
-      {/* 5. Quick Transaction Modal */}
+      {/* 4. Quick Transaction Modal */}
       <QuickTransactionModal
         isOpen={quickTx.isOpen}
         type={quickTx.type}

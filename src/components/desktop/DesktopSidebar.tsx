@@ -15,10 +15,8 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   boxSize = 5.0,
 }) => {
   const navItems: { id: DesktopTab; label: string; icon: string }[] = [
-    { id: 'resumen', label: 'Resumen', icon: 'grid_view' },
+    { id: 'resumen', label: 'Dashboard', icon: 'grid_view' },
     { id: 'sesiones', label: 'Sesiones', icon: 'receipt_long' },
-    { id: 'analisis', label: 'Análisis Avanzado', icon: 'show_chart' },
-    { id: 'banca', label: 'Banca & Riesgo', icon: 'account_balance' },
     { id: 'configuracion', label: 'Configuración', icon: 'tune' },
   ];
 
